@@ -2463,10 +2463,6 @@
 		box-shadow: 0px 0px 0px 7px #fff, 0px 0px 0px 8px rgba(0, 0, 0, 0.1);
 	}
 
-		.logo-image img{
-			width: 100%;
-		}
-
 		.image img {
 			display: block;
 		}
@@ -3405,18 +3401,17 @@
 	}
 
 	#header {
-		background: rgba(0, 0, 0, 0.75);
+		background: rgba(255, 255, 255, 0.85);
 		color: #aed6f1;
 		cursor: default;
-		height: 3.25em;
+		height: 4em;
 		left: 0;
 		line-height: 3.25em;
 		position: fixed;
 		text-align: right;
 		top: 0;
-		width: 20%;
+		width: 100%;
 		z-index: 10001;
-		height: 17%;
 	}
 
 		#header > .logo {
@@ -3431,8 +3426,13 @@
 		}
 
 			#header > .logo a {
-				font-size: 3.25em;
+				font-size: 1.25em;
 				color: #3498db;
+			}
+
+			#header > .logo img{
+				width: 10%;
+				float: left;
 			}
 
 				#header > .logo a:hover {
@@ -3715,9 +3715,9 @@
 		background-size: cover;
 		background-repeat: no-repeat;
 		border-top: 0;
-		min-height: 90vh;
-		height: 90vh !important;
-		position: inherit;
+		min-height: 100vh;
+		height: 100vh !important;
+		position: relative;
 		text-align: center;
 		overflow: hidden;
 	}
@@ -3799,7 +3799,7 @@
 			content: '';
 			display: block;
 			background-color: #000;
-			height: 90%;
+			height: 100%;
 			left: 0;
 			opacity: 0.65;
 			position: absolute;
