@@ -2463,6 +2463,10 @@
 		box-shadow: 0px 0px 0px 7px #fff, 0px 0px 0px 8px rgba(0, 0, 0, 0.1);
 	}
 
+		.logo-image img{
+			width: 100%;
+		}
+
 		.image img {
 			display: block;
 		}
@@ -3410,8 +3414,9 @@
 		position: fixed;
 		text-align: right;
 		top: 0;
-		width: 100%;
+		width: 20%;
 		z-index: 10001;
+		height: 17%;
 	}
 
 		#header > .logo {
@@ -3426,7 +3431,7 @@
 		}
 
 			#header > .logo a {
-				font-size: 1.25em;
+				font-size: 3.25em;
 				color: #3498db;
 			}
 
@@ -3514,7 +3519,7 @@
 			-webkit-animation: none;
 			-ms-animation: none;
 			animation: none;
-			background-color: transparent;
+			/* background-color: transparent; */
 			box-shadow: none;
 			overflow: hidden;
 			position: absolute;
@@ -3705,14 +3710,14 @@
 		-webkit-justify-content: center;
 		-ms-justify-content: center;
 		justify-content: center;
-		background-image: url("../../images/Crackedice.png");
+		background-image: url("../../images/ice.jpg");
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;
 		border-top: 0;
-		min-height: 100vh;
-		height: 100vh !important;
-		position: relative;
+		min-height: 90vh;
+		height: 90vh !important;
+		position: inherit;
 		text-align: center;
 		overflow: hidden;
 	}
@@ -3794,7 +3799,7 @@
 			content: '';
 			display: block;
 			background-color: #000;
-			height: 100%;
+			height: 90%;
 			left: 0;
 			opacity: 0.65;
 			position: absolute;
