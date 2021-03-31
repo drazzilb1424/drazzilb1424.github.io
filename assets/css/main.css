@@ -3542,6 +3542,7 @@
 
 			#banner {
 				font-size: .85em;
+				background-image: url("../../images/ice-mobile.jpg");
 			}
 
 				#banner br {
@@ -3559,10 +3560,9 @@
 		@media screen and (max-width: 736px) {
 
 			#banner {
-				min-height: 0;
+				background-image: url("../../images/ice-mobile.jpg");
 				padding: 8em 2em 4em 2em;
 			}
-
 				#banner .inner {
 					width: 100%;
 				}
