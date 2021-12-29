@@ -1615,12 +1615,15 @@
 
 	p {
 		margin: 0 0 2em 0;
+		font-size: 25px;
+		font-weight: 500;
+		letter-spacing: .5px;
 	}
 
 	h1, h2, h3, h4, h5, h6 {
 		font-weight: 700;
 		line-height: 1.5;
-		margin: 0 0 1em 0;
+		/* margin: 0 0 1em 0; */
 	}
 
 		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
@@ -1637,6 +1640,9 @@
 
 			h1 {
 				font-size: 2.5em;
+			}
+			p {
+				font-size: 15px;
 			}
 
 		}
@@ -1662,7 +1668,7 @@
 		}
 
 	h3 {
-		font-size: 1.75em;
+		font-size: 3em;
 	}
 
 		@media screen and (max-width: 736px) {
@@ -2044,7 +2050,8 @@
 			}
 
 			.flex.flex-2 .col.col2 {
-				width: 66%;
+				/* width: 66%; */
+				width: 100%;
 			}
 
 			@media screen and (max-width: 736px) {
@@ -2454,7 +2461,7 @@
 		}
 
 			.image.fit img {
-				width: 100%;
+				width: 80%;
 			}
 
 		.image.round {
@@ -2831,7 +2838,7 @@
 /* Wrapper */
 
 	.wrapper {
-		padding: 6em 0 4em 0;
+		padding: 3em 0 2em 0;
 		position: relative;
 	}
 
@@ -3379,7 +3386,7 @@
 		}
 
 			#header > .logo img{
-				width: 175px;
+				/* width: 70px; */
 				float: left;
 				margin: 0 auto;
 			}			
@@ -3400,6 +3407,7 @@
 			box-shadow: none;
 			overflow: hidden;
 			position: relative;
+			background-color: #ffffff;
 		}
 
 			#header.alt h1 {
@@ -3440,8 +3448,8 @@
 		-webkit-justify-content: center;
 		-ms-justify-content: center;
 		justify-content: center;
-		background-image: url("../../images/ice.jpg");
-		background-position: center;
+		background-image: url("../../images/banner-background.jpg");
+		/* background-position: center; */
 		background-size: cover;
 		background-repeat: no-repeat;
 		border-top: 0;
@@ -3468,8 +3476,12 @@
 
 		#banner h1 {
 			font-size: 4em;
-			margin-bottom: .25em;
+			margin-bottom: 0;
 			color: #FFF;
+		}
+
+		#banner img{
+			width: 40%;
 		}
 
 		#banner p {
@@ -3518,20 +3530,20 @@
 	}
 
 		#banner:before {
-			-moz-transition: opacity 3s ease;
+			/* -moz-transition: opacity 3s ease;
 			-webkit-transition: opacity 3s ease;
 			-ms-transition: opacity 3s ease;
 			transition: opacity 3s ease;
 			-moz-transition-delay: 1.25s;
 			-webkit-transition-delay: 1.25s;
 			-ms-transition-delay: 1.25s;
-			transition-delay: 1.25s;
+			transition-delay: 1.25s; */
 			content: '';
 			display: block;
-			background-color: #000;
+			background-color: #ffffff;;
 			height: 100%;
 			left: 0;
-			opacity: 0.65;
+			opacity: 0.5;
 			position: absolute;
 			top: 0;
 			width: 100%;
@@ -3542,7 +3554,7 @@
 
 			#banner {
 				font-size: .85em;
-				background-image: url("../../images/ice-mobile.jpg");
+				background-image: url("../../images/banner-background.jpg");
 			}
 
 				#banner br {
@@ -3560,10 +3572,14 @@
 		@media screen and (max-width: 736px) {
 
 			#banner {
-				background-image: url("../../images/ice-mobile.jpg");
+				background-image: url("../../images/banner-background.jpg");
 				padding: 8em 2em 4em 2em;
 			}
 				#banner .inner {
+					width: 100%;
+				}
+
+				#banner img {
 					width: 100%;
 				}
 
@@ -3574,7 +3590,7 @@
 				}
 
 				#banner p {
-					font-size: 1.25em;
+					font-size: 15px;
 				}
 
 				#banner .button {
