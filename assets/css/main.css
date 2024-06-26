@@ -3447,7 +3447,7 @@
 		-webkit-justify-content: center;
 		-ms-justify-content: center;
 		justify-content: center;
-		background-image: url("../../images/banner-background.png");		
+		background-image: url("../../images/winter_twinleaf_town_by_midnitez_remix_dae147t-fullview.jpg");		
 		/* background-position: center; */
 		background-size: cover;
 		background-repeat: no-repeat;
@@ -3480,7 +3480,7 @@
 		}
 
 		#banner img{
-			width: 50%;
+			width: 25%;
 		}
 
 		#banner p {
@@ -3553,7 +3553,7 @@
 
 			#banner {
 				font-size: .85em;
-				background-image: url("../../images/banner-background.png");	
+				background-image: url("../../images/winter_twinleaf_town_by_midnitez_remix_dae147t-fullview.jpg");	
 				background-position: center;			
 			}
 
@@ -3572,7 +3572,7 @@
 		@media screen and (max-width: 736px) {
 
 			#banner {
-				background-image: url("../../images/banner-background.png");
+				background-image: url("../../images/winter_twinleaf_town_by_midnitez_remix_dae147t-fullview.jpg");
 				padding: 8em 2em 4em 2em;
 				background-position: center;			
 			}
