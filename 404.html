@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="icon" href="images/favicon.ico" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your PSA Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #3FA9F3;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        header img {
+            width: auto;
+            max-height: 100px; /* Adjusted for better responsiveness */
+        }
+        .container {
+            padding: 20px;
+        }
+		hr.solid {
+ 			border-top: 1px solid #ccc6c6;
+		}
+        .status-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .status-section h2 {
+            margin-top: 0;
+			margin-bottom: 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+            flex: 1; /* Make flex items grow */
+        }
+        .status-table {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .container p {
+            font-size: 18px;
+            color: #333;
+        }
+        a {
+            color: #3FA9F3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .status-table {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html">
+            <img src="images/Rev.png" alt="Logo">
+        </a>
+        <h1>ERROR 404: Order not found</h1>
+    </header>
+
+    <div class="container">
+        <div class="status-section">
+            <div class="status-table">
+                <div class="status uncomplete">
+                    <p>The order you are looking for does not exist.</p>
+                    <p><a href="index.html">Go back to the homepage</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
