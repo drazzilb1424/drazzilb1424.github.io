@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="icon" href="../images/favicon.ico" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your PSA Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #3FA9F3;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        header img {
+            width: auto;
+            max-height: 100px; /* Adjusted for better responsiveness */
+        }
+        .container {
+            padding: 20px;
+        }
+		hr.solid {
+ 			border-top: 1px solid #ccc6c6;
+		}
+        .status-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .status-section h2 {
+            margin-top: 0;
+			margin-bottom: 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+            flex: 1; /* Make flex items grow */
+        }
+        .uncomplete {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+        }
+        .inprogress{
+            background-color: #fff70099;
+            color: #000000;
+            border: 1px solid #000000;
+        }
+        .complete {
+            background-color: #3FA9F3;
+            border: 1px solid #000000;
+        }
+        .status-table {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        @media (max-width: 600px) {
+            .status-table {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" target="_blank">
+            <img src="../images/Rev.png" alt="Logo">
+        </a>
+        <h1>PSA Order Tracker #972</h1>
+		<div class="last-updated">Page Last Updated: July 31, 2024</div>
+    </header>
+
+    <div class="container">
+        <div class="status-section">
+            <div class="status-table">
+                <div class="status uncomplete">Arrived</div>
+                <div class="status uncomplete">Research and ID</div>
+                <div class="status uncomplete">Grading</div>
+                <div class="status uncomplete">Assembly</div>
+                <div class="status uncomplete">Grades are in</div>
+                <div class="status uncomplete">Shipped</div>
+                <div class="status uncomplete">Dropped Off</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
