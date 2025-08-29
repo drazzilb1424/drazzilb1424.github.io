@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSA Tracker | Order #240</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/tracker.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <script src="/submissions-js/240.js"></script>
+  <!-- COPY STARTING HERE -->
+  <script src="/submissions-js/search.js"></script>
+
+</head>
+
+<body>
+  <!-- HEADER -->
+  <div id="navbar-placeholder"></div>
+
+  <script>
+    fetch('/header.html')
+      .then(response => {
+        if (!response.ok) throw new Error('header failed to load');
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById('navbar-placeholder').innerHTML = html;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+  <!-- END HEADER -->
+
+
+  <div class="page-wrapper trackingbackground">
+    <h1>PSA Tracker | Order #240</h1>
+    <h3 id="displayDate">Page Last Updated:</h3>
+    <div id="progressList"></div>
+  </div>
+
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch('../footer.html')
+      .then(response => {
+        if (!response.ok) throw new Error('footer failed to load');
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById('footer-placeholder').innerHTML = html;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+  <!-- END FOOTER -->
+
+</body>
+
+</html>
