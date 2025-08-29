@@ -1,8 +1,7 @@
-// jQuery(document).ready(function ($) {
-//     const certNumber = '94382719'; // Change to dynamic input if needed
 jQuery(function ($) {
     const qs = new URLSearchParams(window.location.search);
     const certNumber = qs.get('cert'); // fallback for testing
+    // const certNumber = '94382719'; // Change to dynamic input if needed
 
     const buildCertCard = (cert, pop, images) => {
         const statGrid = $('<div class="cert-stat-grid"></div>').css({

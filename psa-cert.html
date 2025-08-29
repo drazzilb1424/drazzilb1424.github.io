@@ -1,94 +1,94 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PSA Cert Lookup</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/tracker.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
-  <!-- COPY STARTING HERE -->
-  <script src="submissions-js/search.js"></script>
-  <script src="/get-cert.js"></script>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>PSA Cert Lookup</title>
+   <link rel="stylesheet" href="/css/style.css" />
+   <link rel="stylesheet" href="/css/tracker.css" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+   <!-- COPY STARTING HERE -->
+   <script src="/submissions-js/search.js"></script>
+   <script src="/get-cert.js"></script>
 
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      color: black;
-    }
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         color: black;
+      }
 
-    .psa-result,
-    .psa-pop {
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      background-color: #ffffff;
-      max-width: 500px;
-    }
+      .psa-result,
+      .psa-pop {
+         border: 1px solid #ccc;
+         padding: 15px;
+         margin-bottom: 20px;
+         border-radius: 10px;
+         background-color: #ffffff;
+         max-width: 500px;
+      }
 
-    .psa-result h2,
-    .psa-pop h2 {
-      margin-top: 0;
-      color: black;
-    }
+      .psa-result h2,
+      .psa-pop h2 {
+         margin-top: 0;
+         color: black;
+      }
 
-    .psa-result p,
-    .psa-pop p {
-      margin: 6px 0;
-      color: black;
-    }
-  </style>
+      .psa-result p,
+      .psa-pop p {
+         margin: 6px 0;
+         color: black;
+      }
+   </style>
 
 </head>
 
 <body class="fade-in">
-  <!-- HEADER -->
-  <div id="navbar-placeholder"></div>
+   <!-- HEADER -->
+   <div id="navbar-placeholder"></div>
 
-  <script>
-    fetch('header.html')
-      .then(response => {
-        if (!response.ok) throw new Error('header failed to load');
-        return response.text();
-      })
-      .then(html => {
-        document.getElementById('navbar-placeholder').innerHTML = html;
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  </script>
-  <!-- END HEADER -->
-
-
-  <div id="main-content">
-    <div id="loader" class="spinner" style="display: none;"></div>
-    <div id="psa-cert-container"></div>
-  </div>
+   <script>
+      fetch('header.html')
+         .then(response => {
+            if (!response.ok) throw new Error('header failed to load');
+            return response.text();
+         })
+         .then(html => {
+            document.getElementById('navbar-placeholder').innerHTML = html;
+         })
+         .catch(error => {
+            console.error(error);
+         });
+   </script>
+   <!-- END HEADER -->
 
 
-  <!-- FOOTER -->
-  <div id="footer-placeholder"></div>
-  <script>
-    fetch('footer.html')
-      .then(response => {
-        if (!response.ok) throw new Error('footer failed to load');
-        return response.text();
-      })
-      .then(html => {
-        document.getElementById('footer-placeholder').innerHTML = html;
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  </script>
-  <!-- END FOOTER -->
+   <div id="main-content">
+      <div id="loader" class="spinner" style="display: none;"></div>
+      <div id="psa-cert-container"></div>
+   </div>
+
+
+   <!-- FOOTER -->
+   <div id="footer-placeholder"></div>
+   <script>
+      fetch('footer.html')
+         .then(response => {
+            if (!response.ok) throw new Error('footer failed to load');
+            return response.text();
+         })
+         .then(html => {
+            document.getElementById('footer-placeholder').innerHTML = html;
+         })
+         .catch(error => {
+            console.error(error);
+         });
+   </script>
+   <!-- END FOOTER -->
 
 </body>
 

@@ -1,40 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Submission Not Found</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/tracker.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="submissions-js/search.js"></script>
-
-</head>
-
-<body class="fade-in tracker-page">
-  <!-- HEADER -->
-  <div id="navbar-placeholder"></div>
-  <script>
-    fetch('header.html')
-      .then(r => { if (!r.ok) throw new Error('header failed to load'); return r.text(); })
-      .then(html => { document.getElementById('navbar-placeholder').innerHTML = html; })
-      .catch(console.error);
-  </script>
-
-  <main class="page-wrapper info-page background" role="main" aria-labelledby="notfound-title">
-    <h1 id="notfound-title">Submission Not Found</h1>
-    <p class="sub-not-found">The submission you're looking for does not exist.</p>
-  </main>
-
-  <!-- FOOTER -->
-  <div id="footer-placeholder"></div>
-  <script>
-    fetch('footer.html')
-      .then(r => { if (!r.ok) throw new Error('footer failed to load'); return r.text(); })
-      .then(html => { document.getElementById('footer-placeholder').innerHTML = html; })
-      .catch(console.error);
-  </script>
-</body>
-
-</html>
+﻿<!doctype html>
+<meta charset="utf-8">
+<title>Redirectingâ€¦</title>
+<link rel="canonical" href="/submission-not-found/">
+<meta http-equiv="refresh" content="0; url=/submission-not-found/">

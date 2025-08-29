@@ -2,7 +2,7 @@ function searchPSAOrder() {
   const input = document.getElementById("psa-lookup").value.trim();
 
   const orderPages = {
-    "018": "/submissions/psa-tracker-order-018.html",
+    "018": "/submissions/psa-tracker-order-018/",
     "161": "/submissions/psa-tracker-order-161.html",
     "202": "/submissions/psa-tracker-order-202.html",
     "240": "/submissions/psa-tracker-order-240.html",
@@ -19,7 +19,7 @@ function searchPSAOrder() {
     "701": "/submissions/psa-tracker-order-701.html",
     "757": "/submissions/psa-tracker-order-757.html",
     "781": "/submissions/psa-tracker-order-781.html",
-    "878": "/submissions/psa-tracker-order-878.html",    
+    "878": "/submissions/psa-tracker-order-878.html",
   };
 
   if (orderPages[input]) {
@@ -28,13 +28,6 @@ function searchPSAOrder() {
     window.location.href = "/submission-not-found.html"; // Redirect to not found page
   }
 }
-
-// function searchPSACert() {
-//   const val = document.getElementById('psa-cert-lookup').value.trim();
-//   if (!val) { alert('Enter a cert #'); return; }
-//   renderCert(val);
-// }
-
 
 function searchPSACert() {
   const certNumber = document.getElementById("psa-cert-lookup").value.trim();
@@ -49,5 +42,4 @@ function searchPSACert() {
 function toggleMenu() {
   const menu = document.getElementById('mobile-menu');
   menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
-
 }
