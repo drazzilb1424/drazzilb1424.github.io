@@ -1,0 +1,58 @@
+<link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+
+<div class="top-banner">
+  Next PSA Submission Pick-Up Date: August 30, 2025
+</div>
+<!-- HEADER -->
+<header class="navbar">
+  <!-- Mobile Menu Toggle -->
+  <div class="mobile-menu-icon" onclick="toggleMenu()">
+    &#9776; <!-- Hamburger icon -->
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div id="mobile-menu" class="mobile-menu">
+    <a href="/index.html">Home</a>
+    <a href="/psa-submission-info.html">Middleman Service</a>
+    <a href="/submission-form.html">Submit Now</a>
+    <a href="/contact.html">Contact Us</a>
+    <a href="/faq.html">FAQ</a>
+  </div>
+
+  <div class="nav-left">
+    <nav>
+      <ul class="nav-links">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/psa-submission-info.html">Middleman Service</a></li>
+        <li><a href="/submission-form.html">Submit Now</a></li>
+        <li><a href="/contact.html">Contact Us</a></li>
+        <li><a href="/faq.html">FAQ</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="logo logo-visible">
+    <a href="/" style="padding: 22px 24px;">
+      <img src="/images/logo.png" alt="Cracked Ice Logo" class="logo-image" />
+    </a>
+  </div>
+
+  <div class="nav-right">
+    <!-- PSA Cert Lookup (now first) -->
+    <label for="psa-cert-lookup">PSA Cert Lookup</label>
+    <div class="lookup-form">
+      <input type="text" id="psa-cert-lookup" placeholder="Enter Cert #" />
+      <!-- <button class="retro-btn" onclick="searchPSACert()">Search</button> -->
+      <button class="retro-btn" onclick="searchPSACert()"><i class="fa fa-search"></i></button>
+
+    </div>
+
+    <!-- PSA Submission Lookup -->
+    <label for="psa-lookup">Submission Lookup</label>
+    <div class="lookup-form">
+      <input type="text" id="psa-lookup" placeholder="Enter PSA Submission #" />
+      <button class="retro-btn" onclick="searchPSAOrder()"><i class="fa fa-search"></i></button>
+    </div>
+  </div>
+
+</header>

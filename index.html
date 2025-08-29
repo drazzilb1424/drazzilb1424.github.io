@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cracked Ice Cards</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="submissions-js/search.js"></script>
+</head>
+
+<body class="fade-in page-home">
+  <!-- HEADER -->
+  <div id="navbar-placeholder"></div>
+
+  <script>
+    fetch('header.html')
+      .then(response => {
+        if (!response.ok) throw new Error('header failed to load');
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById('navbar-placeholder').innerHTML = html;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+  <!-- END HEADER -->
+
+  <section class="banner">
+    <img src="images/banner.png" alt="Banner Image" />
+  </section>
+
+  <div class="background">
+    <div class="page-wrapper maincontent">
+
+      <section class="hero">
+        <div class="hero-content">
+          <h1>PSA Middleman Service</h1>
+          <p class="homepagep">Simplify Submissions, Maximize Values, Encapsulate Memories</p>
+        </div>
+      </section>
+
+      <div class="shell">
+        <section class="psa-pricing" aria-labelledby="psa-pricing-title">
+          <header class="psa-header header-with-sides">
+            <img src="images/charizard-rotate-transparent.png" alt="" class="header-side header-side--left"
+              aria-hidden="true">
+
+            <div class="header-main">
+              <img src="images/psalogo.png" class="psa-header-img">
+              <h2 id="psa-pricing-title">PSA Grading Service</h2>
+              <p class="psa-subhead">No card minimum · No upfront payments</p>
+            </div>
+
+            <img src="images/rayquaza-rotate-transparent.png" alt="" class="header-side header-side--right"
+              aria-hidden="true">
+
+          </header>
+
+          <h3 class="psa-section">Raw Card Submissions</h3>
+          <div class="psa-grid psa-grid--3">
+            <article class="psa-tier">
+              <h4><span class="name">BULK</span> <span class="price">$21.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$200 max insured value<span aria-hidden="true">*</span></li>
+                <li>65 day turnaround<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+
+            <article class="psa-tier">
+              <h4><span class="name">VALUE</span> <span class="price">$29.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$500 max insured value<span aria-hidden="true">*</span></li>
+                <li>45 day turnaround<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+
+            <article class="psa-tier">
+              <h4><span class="name">VALUE PLUS</span> <span class="price">$49.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$500 max insured value<span aria-hidden="true">*</span></li>
+                <li>20 day turnaround<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+
+            <article class="psa-tier">
+              <h4><span class="name">VALUE MAX</span> <span class="price">$69.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$1000 max insured value<span aria-hidden="true">*</span></li>
+                <li>15 day turnaround<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+
+            <article class="psa-tier">
+              <h4><span class="name">REGULAR</span> <span class="price">$84.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$1500 max insured value<span aria-hidden="true">*</span></li>
+                <li>10 day turnaround<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+
+            <article class="psa-tier">
+              <h4><span class="name">EXPRESS</span> <span class="price">$164.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$2500 max insured value<span aria-hidden="true">*</span></li>
+                <li>5 day turnaround with Grader Notes<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+          </div>
+
+          <h3 class="psa-section">Crossover Submissions</h3>
+          <div class="psa-grid psa-grid--3">
+            <article class="psa-tier">
+              <h4><span class="name">VALUE</span> <span class="price">$49.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$500 max insured value<span aria-hidden="true">*</span></li>
+                <li>20 day turnaround<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+
+            <article class="psa-tier">
+              <h4><span class="name">REGULAR</span> <span class="price">$84.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$1500 max insured value<span aria-hidden="true">*</span></li>
+                <li>10 day turnaround<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+
+            <article class="psa-tier">
+              <h4><span class="name">EXPRESS</span> <span class="price">$164.99</span> <small>/ card</small></h4>
+              <ul>
+                <li>$2500 max insured value<span aria-hidden="true">*</span></li>
+                <li>5 day turnaround with Grader Notes<span aria-hidden="true">**</span></li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="psa-legal">
+            <p>* Return shipping cost not included in grading fee.</p>
+            <p>** Turnaround times estimated by PSA.</p>
+          </div>
+
+          <!-- <p class="psa-cta">
+            <a href="/psa-submission-info.html" class="btn">Learn more</a>
+          </p> -->
+          <p class="psa-cta">
+            <a href="/psa-submission-info.html" class="btn btn--primary btn--lg btn--pulse">
+              Start PSA Submission <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+          </p>
+        </section>
+
+        <div class="services-container">
+          <!-- Right Images (Stacked) -->
+          <div class="services-right">
+            <a href="submission-form.html">
+              <img src="images/Submit Now.png" alt="Submit Now" class="service-image" />
+            </a>
+            <img src="images/tracking.png" alt="Track Your Submission" class="service-image" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch('footer.html')
+      .then(response => {
+        if (!response.ok) throw new Error('footer failed to load');
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById('footer-placeholder').innerHTML = html;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+  <!-- END FOOTER -->
+
+</body>
+
+</html>
