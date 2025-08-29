@@ -19,8 +19,7 @@ function searchPSAOrder() {
     "701": "/submissions/psa-tracker-order-701.html",
     "757": "/submissions/psa-tracker-order-757.html",
     "781": "/submissions/psa-tracker-order-781.html",
-    "878": "/submissions/psa-tracker-order-878.html",
-    "099": "/submissions/psa-tracker-order-099.html",
+    "878": "/submissions/psa-tracker-order-878.html",    
   };
 
   if (orderPages[input]) {
@@ -50,4 +49,5 @@ function searchPSACert() {
 function toggleMenu() {
   const menu = document.getElementById('mobile-menu');
   menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+
 }
