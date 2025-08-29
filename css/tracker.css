@@ -1,0 +1,170 @@
+body {
+  background-color: #f8f9fa;
+  /* Light gray background */
+  margin: 0;
+  padding: 0;
+}
+
+.page-wrapper.trackingbackground {
+  max-width: none;
+  margin-right: 150px;
+  margin-left: 150px;
+  border-radius: 8px;
+  text-align: center;
+  box-sizing: border-box;
+  min-height: auto;
+  /* Remove any default height */
+}
+
+h1 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: -webkit-xxx-large;
+  font-weight: 100;
+  letter-spacing: 1.5px;
+  /* try 1px for subtle spacing */
+  color: #000
+}
+
+h3 {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: #000
+}
+
+
+body.tracker-page .page-wrapper {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: #000;
+}
+
+/* Tracker Progress Steps */
+.tracker {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  /* 8 steps */
+  gap: 0.5rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.tracker-step {
+  padding: 0.8rem 0.5rem;
+  border-radius: 6px;
+  font-weight: bold;
+  color: white;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tracker-step.complete {
+  background-color: #35aaf0;
+  color: #000;
+}
+
+.tracker-step.in-progress {
+  background-color: #FFD93D;
+  color: #000;
+}
+
+.tracker-step.pending {
+  background-color: #ffffff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+.legend {
+  margin-top: 2rem;
+  font-size: 1.05rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  align-items: center;
+  color: #000
+}
+
+@media (max-width: 768px) {
+  .legend {
+    display: grid;
+    gap: 16px 24px;
+  }
+}
+
+
+.legend-box {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.legend-box {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.legend-box.in-progress {
+  background-color: #FFD93D;
+}
+
+.legend-box.pending {
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+
+  /* Adjust padding on page-wrapper */
+  .page-wrapper.trackingbackground {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  /* Make the tracker grid responsive */
+  .tracker {
+    grid-template-columns: repeat(4, 1fr);
+    /* Reduce to 4 columns on mobile */
+  }
+
+  .tracker-step {
+    font-size: 0.8rem;
+    /* Smaller font size */
+    padding: 0.6rem 0.3rem;
+    /* Adjust padding */
+  }
+
+  h1 {
+    font-size: 2rem;
+    /* Smaller heading on mobile */
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    /* Adjust font size */
+  }
+
+  .legend {
+    font-size: 0.9rem;
+    gap: 1rem;
+  }
+
+  .legend-box {
+    width: 16px;
+    /* Smaller legend box */
+    height: 16px;
+  }
+}
