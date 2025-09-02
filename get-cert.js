@@ -3,6 +3,20 @@ jQuery(function ($) {
     const certNumber = qs.get('cert'); // fallback for testing
     // const certNumber = '94382719'; // Change to dynamic input if needed
 
+    const sanitize = (v) => String(v ?? '').replace(/[^\dA-Za-z-]/g, '');
+
+    const showMsg = (html) => {
+        $('#psa-cert-container').html(
+            `<p style="text-align:center; color:#b00; margin:12px 0;">${html}</p>`
+        );
+    };
+
+    if (!certNumber) {
+        showMsg('No cert provided. Add <code>?cert=12345678</code> to the URL.');
+        return;
+    }
+
+
     const buildCertCard = (cert, pop, images) => {
         const statGrid = $('<div class="cert-stat-grid"></div>').css({
             display: 'grid',
@@ -125,30 +139,46 @@ jQuery(function ($) {
         });
     };
 
+    // wrap images call so it never rejects
+    const fetchCardImagesSafe = (certNum) =>
+        fetchCardImages(certNum).then(
+            (data) => ({ ok: true, data }),   // success -> pass data through
+            () => ({ ok: false, data: [] })   // error -> resolve with empty list
+        );
+
     $('#loader').show();
 
-    $.when(fetchCertData(certNumber), fetchCardImages(certNumber)).done(function (certRes, imageRes) {
+    $.when(fetchCertData(certNumber), fetchCardImagesSafe(certNumber)).done(function (certRes, imagesSafe) {
         $('#loader').hide();
 
+        // jQuery when() shape:
+        // - certRes is [data, textStatus, jqXHR]
+        // - imagesSafe is the object we resolved above ({ok, data})
         const cert = certRes[0].PSACert;
         const pop = certRes[0].PSAPopulation;
 
+        if (!cert || !cert.CertNumber) {
+            showMsg(`No PSA record found for cert ${sanitize(certNumber)}.`);
+            return;
+        }
+
         // images from API
-        const imgs = imageRes[0] || [];
+        // const imgs = imageRes[0] || [];
 
         // normalize and order: Front first, then Back
-        const images = imgs.slice().sort((a, b) => {
+        const imgsRaw = imagesSafe.data || [];
+        const images = imgsRaw.slice().sort((a, b) => {
             const aFront = !!(a.IsFrontImage || a.ImageType === 'Front');
             const bFront = !!(b.IsFrontImage || b.ImageType === 'Front');
-            if (aFront === bFront) return 0;
-            return aFront ? -1 : 1; // front before back
+            return aFront === bFront ? 0 : (aFront ? -1 : 1);
         });
 
         const certCard = buildCertCard(cert, pop, images);
         $('#psa-cert-container').empty().append(certCard);
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        $('#loader').hide();
-        console.error("❌ Error fetching data:", textStatus, errorThrown);
-        $('#psa-cert-container').html('<p style="color: red; text-align: center;">Failed to load PSA cert data.</p>');
-    });
+    })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            $('#loader').hide();
+            console.error("❌ Error fetching data:", textStatus, errorThrown);
+            $('#psa-cert-container').html(`<p style="color:red; text-align:center;">Failed to load PSA cert data for ${certNumber}.</p>`);
+        });
 });
