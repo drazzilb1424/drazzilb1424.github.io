@@ -25,6 +25,11 @@ function searchPSAOrder() {
     "382": "/submissions/psa-tracker-order-382.html",
     "337": "/submissions/psa-tracker-order-337.html",
     "241": "/submissions/psa-tracker-order-241.html",
+    "170": "/submissions/psa-tracker-order-170.html",
+    "008": "/submissions/psa-tracker-order-008.html",
+    "213": "/submissions/psa-tracker-order-213.html",
+    "311": "/submissions/psa-tracker-order-311.html",
+    "449": "/submissions/psa-tracker-order-449.html",
   };
 
   if (orderPages[input]) {
