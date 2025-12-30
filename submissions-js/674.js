@@ -45,7 +45,6 @@ jQuery(document).ready(function ($) {
 
   const getSubmissionStatus = (submissionNumber) => {
     $.ajax({
-      url: `https://api.psacard.com/publicapi/order/GetSubmissionProgress/${submissionNumber}`,
       url: `https://psasubmissions.crackedicecards.workers.dev/?submission=${encodeURIComponent(submissionNumber)}`,
       method: 'GET',
       success: function (response) {
