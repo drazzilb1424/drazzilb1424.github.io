@@ -165,4 +165,3 @@ jQuery(document).ready(function ($) {
   // Append the grid container to the body or a specific element
   $('#progressList').append(statusDiv).append(gridContainer).append(legendDiv);
 });
-
