@@ -46,10 +46,8 @@ jQuery(document).ready(function ($) {
   const getSubmissionStatus = (submissionNumber) => {
     $.ajax({
       url: `https://api.psacard.com/publicapi/order/GetSubmissionProgress/${submissionNumber}`,
+      url: `https://psasubmissions.crackedicecards.workers.dev/?submission=${encodeURIComponent(submissionNumber)}`,
       method: 'GET',
-      headers: {
-        'Authorization': 'bearer 1oPf1WwogPfhdzo_7EoDW3g9SzvlaCEQXxnius6vjZsI7Vown7wJ2glbRb_7yHI75W4M0L-wE0eRw1yr74ZHnh5E5CCLt90-O1jBjLugLhOYLIPeBt0illfQsmDjpgfmjD-vxYQrKEW25KpUm4scl0Ld6I_3mtO1RLOqaExR_K6EVHeoUUNf2JnbkpGjVGzHuAMoqGgU9QnzZ7buJA693jalrwZTTnTPqbgaNxFFEFo5X77rauk-JnK78LDYexMHA9e4oekDODLJUzAmii5xSuWY1rsI-dMARgFZSCZG-XX48Bo7'
-      },
       success: function (response) {
         const { orderProgressSteps } = response;
 
@@ -167,3 +165,4 @@ jQuery(document).ready(function ($) {
   // Append the grid container to the body or a specific element
   $('#progressList').append(statusDiv).append(gridContainer).append(legendDiv);
 });
+
