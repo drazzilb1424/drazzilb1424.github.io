@@ -121,23 +121,18 @@ jQuery(function ($) {
 
     const fetchCertData = (certNum) => {
         return $.ajax({
-            url: `https://api.psacard.com/publicapi/cert/GetByCertNumberForFileAppend/${certNum}`,
-            method: 'GET',
-            headers: {
-                'Authorization': 'bearer 1oPf1WwogPfhdzo_7EoDW3g9SzvlaCEQXxnius6vjZsI7Vown7wJ2glbRb_7yHI75W4M0L-wE0eRw1yr74ZHnh5E5CCLt90-O1jBjLugLhOYLIPeBt0illfQsmDjpgfmjD-vxYQrKEW25KpUm4scl0Ld6I_3mtO1RLOqaExR_K6EVHeoUUNf2JnbkpGjVGzHuAMoqGgU9QnzZ7buJA693jalrwZTTnTPqbgaNxFFEFo5X77rauk-JnK78LDYexMHA9e4oekDODLJUzAmii5xSuWY1rsI-dMARgFZSCZG-XX48Bo7'
-            }
+            url: `https://psa-certs.crackedicecards.workers.dev?mode=cert&cert=${encodeURIComponent(certNum)}`,
+            method: 'GET'
         });
     };
 
     const fetchCardImages = (certNum) => {
         return $.ajax({
-            url: `https://api.psacard.com/publicapi/cert/GetImagesByCertNumber/${certNum}`,
-            method: 'GET',
-            headers: {
-                'Authorization': 'bearer 1oPf1WwogPfhdzo_7EoDW3g9SzvlaCEQXxnius6vjZsI7Vown7wJ2glbRb_7yHI75W4M0L-wE0eRw1yr74ZHnh5E5CCLt90-O1jBjLugLhOYLIPeBt0illfQsmDjpgfmjD-vxYQrKEW25KpUm4scl0Ld6I_3mtO1RLOqaExR_K6EVHeoUUNf2JnbkpGjVGzHuAMoqGgU9QnzZ7buJA693jalrwZTTnTPqbgaNxFFEFo5X77rauk-JnK78LDYexMHA9e4oekDODLJUzAmii5xSuWY1rsI-dMARgFZSCZG-XX48Bo7'
-            }
+            url: `https://psa-certs.crackedicecards.workers.dev?mode=images&cert=${encodeURIComponent(certNum)}`,
+            method: 'GET'
         });
     };
+
 
     // wrap images call so it never rejects
     const fetchCardImagesSafe = (certNum) =>
