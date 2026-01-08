@@ -1683,7 +1683,7 @@ summary:focus-visible {
   }
 
   .logo-hidden {
-    visibility: hidden;
+    display: none !important;
   }
 }
 
@@ -1831,4 +1831,5 @@ summary:focus-visible {
     padding: 0;
     text-align: center;
   }
+
 }
