@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0D7YH8NJZZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-0D7YH8NJZZ');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cracked Ice Cards</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="submissions-js/search.js"></script>
+</head>
+
+<body class="fade-in page-home">
+  <!-- HEADER -->
+  <div id="navbar-placeholder"></div>
+
+  <script>
+    fetch('header.html')
+      .then(response => {
+        if (!response.ok) throw new Error('header failed to load');
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById('navbar-placeholder').innerHTML = html;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+  <!-- END HEADER -->
+
+  <!--SUBMISSION INFO-->
+  <div class="info-page page-content">
+
+    <div class="info-header">
+      <p>Looks like this page was graded a PSA 0 — it does not exist.
+      <h2><a style="font-size: xxx-large;" href="./">Return home</a></h2>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+  <script>
+    fetch('footer.html')
+      .then(response => {
+        if (!response.ok) throw new Error('footer failed to load');
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById('footer-placeholder').innerHTML = html;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+  <!-- END FOOTER -->
+
+</body>
+
+
+</html>
