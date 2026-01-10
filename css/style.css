@@ -1608,12 +1608,20 @@ summary:focus-visible {
   .psa-grid--3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .logo-hidden {
+    display: none !important;
+  }
 }
 
 /* small phones: 1 column */
 @media (max-width: 560px) {
   .psa-grid--3 {
     grid-template-columns: 1fr;
+  }
+
+  .logo-hidden {
+    display: none !important;
   }
 }
 
@@ -1671,6 +1679,11 @@ summary:focus-visible {
     grid-template-columns: 1fr;
     max-width: 320px;
   }
+
+  .logo-hidden {
+    display: none !important;
+  }
+
 }
 
 
@@ -1693,7 +1706,7 @@ summary:focus-visible {
   }
 
   .logo {
-    display: none;
+    margin: auto
   }
 
   .nav-right label {
@@ -1702,10 +1715,6 @@ summary:focus-visible {
 
   .info-section ul li {
     font-size: 14px;
-  }
-
-  .logo {
-    margin: auto
   }
 
   /* Layout & spacing */
@@ -1744,9 +1753,11 @@ summary:focus-visible {
     padding: 1rem 12px;
     grid-template-columns: 1fr;
     padding-top: calc(var(--logoH) + var(--pad)*2);
+
     /* padding-top: 96px; */
     /* reserves space for centered logo (≈80px + padding) */
   }
+
 
   /* Hide center text on mobile */
   .header-center-text {
@@ -1770,7 +1781,7 @@ summary:focus-visible {
   }
 
   /* Hamburger stays clickable above the logo */
-  .mobile-menu-icon {
+  /* .mobile-menu-icon {
     grid-column: 1 / 2;
     grid-row: 1;
     justify-self: start;
@@ -1778,6 +1789,25 @@ summary:focus-visible {
     margin-top: 8px;
     margin-left: 12px;
     z-index: 10;
+  } */
+
+  .mobile-menu-icon {
+    display: flex;
+    justify-content: space-between;
+    /* pushes hamburger left, logo right */
+    align-items: center;
+    /* vertical centering */
+    width: 100%;
+    /* ensure it spans full header width */
+    padding: 0 12px;
+  }
+
+  .mobile-menu-icon img.logo-image {
+    height: 75px;
+    /* optional */
+    width: auto;
+    margin-top: 20px;
+    margin-right: 20px;
   }
 
   /* Right side tools (stack nicely) */
