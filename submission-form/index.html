@@ -49,24 +49,12 @@
     </div>
   </div>
   <!-- FOOTER -->
-  <div id="footer-placeholder"></div>
-  <script>
-    fetch('footer.html')
-      .then(response => {
-        if (!response.ok) throw new Error('footer failed to load');
-        return response.text();
-      })
-      .then(html => {
-        document.getElementById('footer-placeholder').innerHTML = html;
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  </script>
+ 
   <!-- END FOOTER -->
 
 </body>
 
 
 </html>
+
 
