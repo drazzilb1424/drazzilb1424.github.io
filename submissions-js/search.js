@@ -1,7 +1,7 @@
 function searchPSAOrder() {
   const input = document.getElementById("psa-lookup").value.trim();
 
-    const orderPages = {
+  const orderPages = {
     "220": "/submissions/psa-tracker-order-220.html",
     "868": "/submissions/psa-tracker-order-868.html",
     "869": "/submissions/psa-tracker-order-869.html",
@@ -24,6 +24,8 @@ function searchPSAOrder() {
     "259": "/submissions/psa-tracker-order-259.html",
     "275": "/submissions/psa-tracker-order-275.html",
     "297": "/submissions/psa-tracker-order-297.html",
+    "715": "/submissions/psa-tracker-order-715.html",
+    "721": "/submissions/psa-tracker-order-721.html",
   };
 
   if (orderPages[input]) {
