@@ -37,7 +37,7 @@ jQuery(function ($) {
         const card = $('<div class="psa-cert-card"></div>');
 
         card.append(`<h2 style="margin-top: 0; text-align: center; color: black; padding-top: 10px">PSA Cert #${cert.CertNumber}</h3>`);
-        card.append(`<h3 style="margin-top: 0; text-align: center; color: black; padding-top: 10px">${cert.Year} ${cert.SetName}# ${cert.CardNumber}<br>${cert.Subject} ${cert.Variety}</h3>`);
+        card.append(`<h3 style="margin-top: 0; text-align: center; color: black; padding-top: 10px">${cert.Year} ${cert.SetName} #${cert.CardNumber}<br>${cert.Subject} ${cert.Variety}</h3>`);
 
         if (images.length > 0) {
             const imageRow = $('<div class="psa-image-row"></div>').css({
