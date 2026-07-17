@@ -179,6 +179,8 @@ function makeGuardLayer() {
 
 function makeDividerLayer() {
    const layer = document.createElement('canvas');
+   const leftInset = 11;
+
    layer.width = canvas.width;
    layer.height = canvas.height;
 
@@ -187,8 +189,8 @@ function makeDividerLayer() {
    const color = guardColor.value;
    const thickness = 22;
 
-   const outerX = 70;
-   const outerW = 560;
+   const outerX = 85;
+   const outerW = 520;
 
    const dividerY = 245;
    const dividerThickness = 50;
@@ -197,11 +199,11 @@ function makeDividerLayer() {
 
    roundedRectPath(
       g,
-      outerX + thickness / 2,
+      outerX + thickness / 2 + 10,
       dividerY - dividerThickness / 2,
-      outerW - thickness,
+      outerW - thickness - leftInset,
       dividerThickness,
-      6
+      0
    );
 
    g.fill();
