@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <!-- Google tag (gtag.js) -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0D7YH8NJZZ"></script>
+   <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+         dataLayer.push(arguments);
+      }
+
+      gtag('js', new Date());
+      gtag('config', 'G-0D7YH8NJZZ');
+   </script>
+
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+   <title>Slab Guard Preview</title>
+
+   <link rel="stylesheet" href="../css/style.css" />
+   <link rel="stylesheet" href="../css/slab-guard-preview.css" />
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
+
+   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+
+<body class="fade-in">
+
+   <!-- HEADER -->
+   <div id="navbar-placeholder"></div>
+
+   <script>
+      fetch('../header.html')
+         .then(response => {
+            if (!response.ok) {
+               throw new Error('Header failed to load');
+            }
+
+            return response.text();
+         })
+         .then(html => {
+            document.getElementById('navbar-placeholder').innerHTML = html;
+         })
+         .catch(error => {
+            console.error(error);
+         });
+   </script>
+   <!-- END HEADER -->
+
+   <main class="slab-preview-page">
+
+      <header class="slab-preview-hero">
+         <div>
+            <h1>Slab Guard Preview</h1>
+
+            <p>
+               Upload a photo of your slab and preview it with different
+               slab guard colors.
+            </p>
+         </div>
+      </header>
+
+      <section class="slab-preview-shell">
+
+         <aside class="slab-preview-panel slab-preview-controls">
+            <h2>Customize</h2>
+
+            <div class="slab-preview-section">
+               <div class="slab-preview-label-row">
+                  <label for="slabUpload">Slab image</label>
+               </div>
+
+               <label class="slab-preview-upload" for="slabUpload">
+                  <input id="slabUpload" type="file" accept="image/png,image/jpeg,image/webp" />
+
+                  <div>
+                     <div class="slab-preview-upload-icon">
+                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                     </div>
+
+                     <strong>Upload a slab photo</strong>
+                     <span>PNG, JPG, or WEBP</span>
+                  </div>
+               </label>
+            </div>
+
+            <div class="slab-preview-section">
+               <div class="slab-preview-label-row">
+                  <label for="guardColor">Guard color</label>
+                  <span class="slab-preview-value" id="hexValue">
+                     #FFFFFF
+                  </span>
+               </div>
+
+               <input id="guardColor" type="color" value="#FFFFFF" />
+
+               <div class="slab-preview-swatches" id="swatches">
+                  <button class="slab-preview-swatch active" type="button" data-color="#FFFFFF"
+                     style="background:#ffffff" title="White"></button>
+
+                  <button class="slab-preview-swatch" type="button" data-color="#111111" style="background:#111111"
+                     title="Black"></button>
+
+                  <button class="slab-preview-swatch" type="button" data-color="#0180CD" style="background:#0180CD"
+                     title="Blue"></button>
+
+                  <button class="slab-preview-swatch" type="button" data-color="#25B67F" style="background:#25B67F"
+                     title="Green"></button>
+
+                  <button class="slab-preview-swatch" type="button" data-color="#D23E3E" style="background:#D23E3E"
+                     title="Red"></button>
+
+                  <button class="slab-preview-swatch" type="button" data-color="#AD91DB" style="background:#AD91DB"
+                     title="Purple"></button>
+
+                  <button class="slab-preview-swatch" type="button" data-color="#EFD55C" style="background:#EFD55C"
+                     title="Yellow"></button>
+
+                  <button class="slab-preview-swatch" type="button" data-color="#C89E7E" style="background:#C89E7E"
+                     title="Peanut"></button>
+               </div>
+            </div>
+
+            <div class="slab-preview-section">
+               <div class="slab-preview-label-row">
+                  <label for="zoom">Slab zoom</label>
+                  <span class="slab-preview-value" id="zoomValue">
+                     100%
+                  </span>
+               </div>
+
+               <input id="zoom" type="range" min="75" max="150" value="100" />
+
+               <div class="slab-preview-label-row slab-preview-spaced">
+                  <label for="offsetX">Horizontal position</label>
+                  <span class="slab-preview-value" id="offsetXValue">
+                     0
+                  </span>
+               </div>
+
+               <input id="offsetX" type="range" min="-120" max="120" value="0" />
+
+               <div class="slab-preview-label-row slab-preview-spaced">
+                  <label for="offsetY">Vertical position</label>
+                  <span class="slab-preview-value" id="offsetYValue">
+                     0
+                  </span>
+               </div>
+
+               <input id="offsetY" type="range" min="-160" max="160" value="0" />
+            </div>
+
+            <div class="slab-preview-actions">
+               <button id="downloadBtn" class="slab-preview-button slab-preview-primary" type="button">
+                  Download Preview
+               </button>
+
+               <button id="resetBtn" class="slab-preview-button slab-preview-secondary" type="button">
+                  Reset Adjustments
+               </button>
+            </div>
+         </aside>
+
+         <section class="slab-preview-panel slab-preview-card">
+            <div class="slab-preview-header">
+               <h2>Preview</h2>
+               <span>We recommend using scans provided directly by the grading company for the most accurate
+                  preview.</span>
+            </div>
+
+            <div class="slab-preview-stage">
+               <canvas id="previewCanvas" width="700" height="1000"></canvas>
+            </div>
+
+            <p class="slab-preview-tip">
+               The checkerboard is only the page background. The downloaded
+               PNG has a transparent background around the guard.
+            </p>
+         </section>
+
+      </section>
+   </main>
+
+   <!-- FOOTER -->
+   <div id="footer-placeholder"></div>
+
+   <script>
+      fetch('../footer.html')
+         .then(response => {
+            if (!response.ok) {
+               throw new Error('Footer failed to load');
+            }
+
+            return response.text();
+         })
+         .then(html => {
+            document.getElementById('footer-placeholder').innerHTML = html;
+         })
+         .catch(error => {
+            console.error(error);
+         });
+   </script>
+   <!-- END FOOTER -->
+
+   <script src="../slab-guard-preview.js"></script>
+</body>
+
+</html>
