@@ -90,56 +90,6 @@
                </label>
             </div>
 
-            <div class="slab-preview-section">
-               <div class="slab-preview-label-row">
-                  <label for="guardColor">Guard color</label>
-
-                  <span class="slab-preview-value" id="hexValue">
-                     #FFFFFF
-                  </span>
-               </div>
-
-               <input id="guardColor" type="color" value="#FFFFFF" />
-
-               <div class="slab-preview-swatches" id="swatches">
-                  <button class="slab-preview-swatch active" type="button" data-color="#FFFFFF"
-                     style="background:#ffffff" title="White">
-                  </button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#212528" style="background:#212528"
-                     title="Black">
-                  </button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#4D91D8" style="background:#4D91D8"
-                     title="Blue">
-                  </button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#5EBE73" style="background:#5EBE73"
-                     title="Green">
-                  </button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#D23E3E" style="background:#D23E3E"
-                     title="Red">
-                  </button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#AD91DB" style="background:#AD91DB"
-                     title="Purple">
-                  </button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#FE8D47" style="background:#FE8D47"
-                     title="Orange">
-                  </button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#EFD55C" style="background:#EFD55C"
-                     title="Yellow">
-                  </button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#C89E7E" style="background:#C89E7E"
-                     title="Peanut">
-                  </button>
-               </div>
-            </div>
-
             <div class="slab-preview-actions">
                <button id="downloadBtn" class="slab-preview-button slab-preview-primary" type="button">
                   Download Preview
@@ -164,11 +114,56 @@
             <div class="slab-preview-stage">
                <canvas id="previewCanvas" width="700" height="1000"></canvas>
             </div>
+         </section>
 
-            <p class="slab-preview-tip">
-               The checkerboard is only the page background. The downloaded
-               PNG has a transparent background around the guard.
-            </p>
+         <section class="slab-preview-panel slab-preview-colors">
+            <div class="slab-preview-label-row">
+               <label for="guardColor">Guard color</label>
+
+               <span class="slab-preview-value" id="hexValue">
+                  #FFFFFF
+               </span>
+            </div>
+
+            <input id="guardColor" type="color" value="#FFFFFF" />
+
+            <div class="slab-preview-swatches" id="swatches">
+               <button class="slab-preview-swatch active" type="button" data-color="#FFFFFF" style="background:#ffffff"
+                  title="White" aria-label="White">
+               </button>
+
+               <button class="slab-preview-swatch" type="button" data-color="#212528" style="background:#212528"
+                  title="Black" aria-label="Black">
+               </button>
+
+               <button class="slab-preview-swatch" type="button" data-color="#4D91D8" style="background:#4D91D8"
+                  title="Blue" aria-label="Blue">
+               </button>
+
+               <button class="slab-preview-swatch" type="button" data-color="#5EBE73" style="background:#5EBE73"
+                  title="Green" aria-label="Green">
+               </button>
+
+               <button class="slab-preview-swatch" type="button" data-color="#D23E3E" style="background:#D23E3E"
+                  title="Red" aria-label="Red">
+               </button>
+
+               <button class="slab-preview-swatch" type="button" data-color="#AD91DB" style="background:#AD91DB"
+                  title="Purple" aria-label="Purple">
+               </button>
+
+               <button class="slab-preview-swatch" type="button" data-color="#FE8D47" style="background:#FE8D47"
+                  title="Orange" aria-label="Orange">
+               </button>
+
+               <button class="slab-preview-swatch" type="button" data-color="#EFD55C" style="background:#EFD55C"
+                  title="Yellow" aria-label="Yellow">
+               </button>
+
+               <button class="slab-preview-swatch" type="button" data-color="#C89E7E" style="background:#C89E7E"
+                  title="Peanut" aria-label="Peanut">
+               </button>
+            </div>
          </section>
 
          <section class="slab-preview-panel slab-preview-adjustments">
