@@ -286,19 +286,44 @@
 }
 
 .slab-preview-stage {
-   display: flex;
-   justify-content: center;
-   align-items: center;
+   display: grid;
+   place-items: center;
+   min-height: 690px;
+   padding: 34px;
+   border-radius: 19px;
+   overflow: hidden;
+   background-color: #eceff3;
+   background-image:
+      linear-gradient(45deg,
+         #e1e4e9 25%,
+         transparent 25%),
+      linear-gradient(-45deg,
+         #e1e4e9 25%,
+         transparent 25%),
+      linear-gradient(45deg,
+         transparent 75%,
+         #e1e4e9 75%),
+      linear-gradient(-45deg,
+         transparent 75%,
+         #e1e4e9 75%);
 
-   padding: 12px;
-   min-height: unset;
+   background-size: 24px 24px;
 
-   background: transparent;
+   background-position:
+      0 0,
+      0 12px,
+      12px -12px,
+      -12px 0;
 }
 
 #previewCanvas {
-   width: 460px;
-   max-width: 100%;
+   display: block;
+   width: min(100%, 540px);
+   height: auto;
+   max-height: 620px;
+   object-fit: contain;
+   filter:
+      drop-shadow(0 20px 24px rgba(27, 31, 40, 0.22));
 }
 
 .slab-preview-tip {
@@ -384,8 +409,8 @@
    }
 
    .slab-preview-stage {
-      min-height: 0;
-      padding: 12px;
+      min-height: 540px;
+      padding: 18px;
    }
 }
 
@@ -416,8 +441,13 @@
    }
 
    .slab-preview-stage {
+      min-height: 500px;
       padding: 10px;
       border-radius: 16px;
+   }
+
+   #previewCanvas {
+      max-height: 570px;
    }
 
    .slab-preview-swatch:first-child {
