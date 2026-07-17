@@ -93,6 +93,7 @@
             <div class="slab-preview-section">
                <div class="slab-preview-label-row">
                   <label for="guardColor">Guard color</label>
+
                   <span class="slab-preview-value" id="hexValue">
                      #FFFFFF
                   </span>
@@ -102,61 +103,41 @@
 
                <div class="slab-preview-swatches" id="swatches">
                   <button class="slab-preview-swatch active" type="button" data-color="#FFFFFF"
-                     style="background:#ffffff" title="White"></button>
+                     style="background:#ffffff" title="White">
+                  </button>
 
                   <button class="slab-preview-swatch" type="button" data-color="#212528" style="background:#212528"
-                     title="Black"></button>
+                     title="Black">
+                  </button>
 
                   <button class="slab-preview-swatch" type="button" data-color="#4D91D8" style="background:#4D91D8"
-                     title="Blue"></button>
+                     title="Blue">
+                  </button>
 
                   <button class="slab-preview-swatch" type="button" data-color="#5EBE73" style="background:#5EBE73"
-                     title="Green"></button>
+                     title="Green">
+                  </button>
 
                   <button class="slab-preview-swatch" type="button" data-color="#D23E3E" style="background:#D23E3E"
-                     title="Red"></button>
-
-                  <button class="slab-preview-swatch" type="button" data-color="#FE8D47" style="background:#FE8D47"
-                     title="Orange"></button>
+                     title="Red">
+                  </button>
 
                   <button class="slab-preview-swatch" type="button" data-color="#AD91DB" style="background:#AD91DB"
-                     title="Purple"></button>
+                     title="Purple">
+                  </button>
+
+                  <button class="slab-preview-swatch" type="button" data-color="#FE8D47" style="background:#FE8D47"
+                     title="Orange">
+                  </button>
 
                   <button class="slab-preview-swatch" type="button" data-color="#EFD55C" style="background:#EFD55C"
-                     title="Yellow"></button>
+                     title="Yellow">
+                  </button>
 
                   <button class="slab-preview-swatch" type="button" data-color="#C89E7E" style="background:#C89E7E"
-                     title="Peanut"></button>
+                     title="Peanut">
+                  </button>
                </div>
-            </div>
-
-            <div class="slab-preview-section">
-               <div class="slab-preview-label-row">
-                  <label for="zoom">Slab zoom</label>
-                  <span class="slab-preview-value" id="zoomValue">
-                     100%
-                  </span>
-               </div>
-
-               <input id="zoom" type="range" min="75" max="150" value="100" />
-
-               <div class="slab-preview-label-row slab-preview-spaced">
-                  <label for="offsetX">Horizontal position</label>
-                  <span class="slab-preview-value" id="offsetXValue">
-                     0
-                  </span>
-               </div>
-
-               <input id="offsetX" type="range" min="-120" max="120" value="0" />
-
-               <div class="slab-preview-label-row slab-preview-spaced">
-                  <label for="offsetY">Vertical position</label>
-                  <span class="slab-preview-value" id="offsetYValue">
-                     0
-                  </span>
-               </div>
-
-               <input id="offsetY" type="range" min="-160" max="160" value="0" />
             </div>
 
             <div class="slab-preview-actions">
@@ -173,8 +154,11 @@
          <section class="slab-preview-panel slab-preview-card">
             <div class="slab-preview-header">
                <h2>Preview</h2>
-               <span>We recommend using scans provided directly by the grading company for the most accurate
-                  preview.</span>
+
+               <span>
+                  We recommend using scans provided directly by the grading
+                  company for the most accurate preview.
+               </span>
             </div>
 
             <div class="slab-preview-stage">
@@ -185,6 +169,29 @@
                The checkerboard is only the page background. The downloaded
                PNG has a transparent background around the guard.
             </p>
+         </section>
+
+         <section class="slab-preview-panel slab-preview-adjustments">
+            <div class="slab-preview-label-row">
+               <label for="zoom">Slab zoom</label>
+               <span class="slab-preview-value" id="zoomValue">100%</span>
+            </div>
+
+            <input id="zoom" type="range" min="75" max="150" value="100" />
+
+            <div class="slab-preview-label-row slab-preview-spaced">
+               <label for="offsetX">Horizontal position</label>
+               <span class="slab-preview-value" id="offsetXValue">0</span>
+            </div>
+
+            <input id="offsetX" type="range" min="-120" max="120" value="0" />
+
+            <div class="slab-preview-label-row slab-preview-spaced">
+               <label for="offsetY">Vertical position</label>
+               <span class="slab-preview-value" id="offsetYValue">0</span>
+            </div>
+
+            <input id="offsetY" type="range" min="-160" max="160" value="0" />
          </section>
 
       </section>
