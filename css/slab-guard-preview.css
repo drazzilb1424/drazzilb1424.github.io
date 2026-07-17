@@ -336,22 +336,16 @@
 @media (max-width: 860px) {
    .slab-preview-page {
       width: min(calc(100% - 24px), 620px);
+      max-width: 100%;
       padding-top: 24px;
    }
 
-   .slab-preview-swatches {
-      display: flex;
-      gap: 12px;
-      padding: 8px 0 12px;
-      overflow-x: auto;
-      overscroll-behavior-inline: contain;
-      scroll-snap-type: inline proximity;
-      scrollbar-width: thin;
-   }
-
    .slab-preview-shell {
-      grid-template-columns: 1fr;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
 
+      grid-template-columns: minmax(0, 1fr);
       grid-template-areas:
          "controls"
          "preview"
@@ -359,8 +353,14 @@
          "adjustments";
    }
 
-   .slab-preview-hero {
-      margin-bottom: 18px;
+   .slab-preview-panel,
+   .slab-preview-controls,
+   .slab-preview-card,
+   .slab-preview-colors,
+   .slab-preview-adjustments {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
    }
 
    .slab-preview-controls,
@@ -369,22 +369,48 @@
       padding: 10px;
    }
 
+   .slab-preview-hero {
+      margin-bottom: 18px;
+   }
+
    .slab-preview-header {
       align-items: flex-start;
+   }
+
+   .slab-preview-page input[type="range"],
+   #guardColor {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+   }
+
+   .slab-preview-swatches {
+      display: flex;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      gap: 12px;
+      padding: 8px 6px 12px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: inline proximity;
+      scrollbar-width: thin;
+   }
+
+   .slab-preview-swatch {
+      width: 56px;
+      height: 56px;
+      flex: 0 0 56px;
+      scroll-snap-align: start;
+
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 0 1px #bfc5cf;
    }
 
    .slab-preview-stage {
       min-height: 540px;
       padding: 18px;
-   }
-
-   .slab-preview-swatch {
-      width: 40px;
-      height: 40px;
-      flex: 0 0 40px;
-
-      border: 3px solid #ffffff;
-      box-shadow: 0 0 0 1px #bfc5cf;
    }
 }
 
@@ -438,4 +464,10 @@
       transform: scale(1.08);
       outline-color: #4f5664;
    }
+}
+
+html,
+body {
+   max-width: 100%;
+   overflow-x: hidden;
 }
