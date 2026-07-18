@@ -55,51 +55,23 @@
 
    <main class="slab-preview-page">
 
+      <input id="slabUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+
       <header class="slab-preview-hero">
          <div>
             <h1>Slab Guard Preview</h1>
-
-            <p>
-               Upload a photo of your slab and preview it with different
-               slab guard colors.
-            </p>
          </div>
       </header>
 
       <section class="slab-preview-shell">
 
-         <aside class="slab-preview-panel slab-preview-controls">
-            <h2>Customize</h2>
-
-            <div class="slab-preview-section">
-               <div class="slab-preview-label-row">
-                  <label for="slabUpload">Slab image</label>
-               </div>
-
-               <label class="slab-preview-upload" for="slabUpload">
-                  <input id="slabUpload" type="file" accept="image/png,image/jpeg,image/webp" />
-
-                  <div>
-                     <div class="slab-preview-upload-icon">
-                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                     </div>
-
-                     <strong>Upload a slab photo</strong>
-                     <span>PNG, JPG, or WEBP</span>
-                  </div>
-               </label>
-            </div>
-
-            <div class="slab-preview-actions">
-               <button id="downloadBtn" class="slab-preview-button slab-preview-primary" type="button">
-                  Download Preview
-               </button>
-
-               <button id="resetBtn" class="slab-preview-button slab-preview-secondary" type="button">
-                  Reset Adjustments
-               </button>
-            </div>
-         </aside>
+         <!-- <aside class="slab-preview-panel slab-preview-controls"> -->
+         <!-- <div class="slab-preview-actions"> -->
+         <button id="downloadBtn" class="slab-preview-button slab-preview-primary" type="button">
+            Download Preview
+         </button>
+         <!-- </div> -->
+         <!-- </aside> -->
 
          <section class="slab-preview-panel slab-preview-card">
             <div class="slab-preview-header">
@@ -118,51 +90,43 @@
 
          <section class="slab-preview-panel slab-preview-colors">
             <div class="slab-preview-label-row">
-               <label for="guardColor">Guard color</label>
-
+               <span>Guard color</span>
                <span class="slab-preview-value" id="hexValue">
-                  #FFFFFF
+                  White
                </span>
             </div>
 
-            <input id="guardColor" type="color" value="#FFFFFF" />
+            <!-- <input id="guardColor" type="color" value="#FFFFFF" /> -->
 
             <div class="slab-preview-swatches" id="swatches">
-               <button class="slab-preview-swatch active" type="button" data-color="#FFFFFF" style="background:#ffffff"
-                  title="White" aria-label="White">
-               </button>
+               <button class="slab-preview-swatch white" data-color="#FFFFFF" data-name="White"
+                  style="background:#FFFFFF;"></button>
 
-               <button class="slab-preview-swatch" type="button" data-color="#212528" style="background:#212528"
-                  title="Black" aria-label="Black">
-               </button>
+               <button class="slab-preview-swatch black" data-color="#212528" data-name="Black"
+                  style="background:#212528;"></button>
 
-               <button class="slab-preview-swatch" type="button" data-color="#4D91D8" style="background:#4D91D8"
-                  title="Blue" aria-label="Blue">
-               </button>
+               <button class="slab-preview-swatch blue" data-color="#4D91D8" data-name="Blue"
+                  style="background:#4D91D8;"></button>
 
-               <button class="slab-preview-swatch" type="button" data-color="#5EBE73" style="background:#5EBE73"
-                  title="Green" aria-label="Green">
-               </button>
+               <button class="slab-preview-swatch green" data-color="#5EBE73" data-name="Green"
+                  style="background:#5EBE73;"></button>
 
-               <button class="slab-preview-swatch" type="button" data-color="#D23E3E" style="background:#D23E3E"
-                  title="Red" aria-label="Red">
-               </button>
+               <button class="slab-preview-swatch red" data-color="#D23E3E" data-name="Red"
+                  style="background:#D23E3E;"></button>
 
-               <button class="slab-preview-swatch" type="button" data-color="#AD91DB" style="background:#AD91DB"
-                  title="Purple" aria-label="Purple">
-               </button>
+               <button class="slab-preview-swatch purple" data-color="#AD91DB" data-name="Purple"
+                  style="background:#AD91DB;"></button>
 
-               <button class="slab-preview-swatch" type="button" data-color="#FE8D47" style="background:#FE8D47"
-                  title="Orange" aria-label="Orange">
-               </button>
+               <button class="slab-preview-swatch orange" data-color="#FE8D47" data-name="Orange"
+                  style="background:#FE8D47;"></button>
 
-               <button class="slab-preview-swatch" type="button" data-color="#EFD55C" style="background:#EFD55C"
-                  title="Yellow" aria-label="Yellow">
-               </button>
+               <button class="slab-preview-swatch yellow" data-color="#EFD55C" data-name="Yellow"
+                  style="background:#EFD55C;"></button>
 
-               <button class="slab-preview-swatch" type="button" data-color="#C89E7E" style="background:#C89E7E"
-                  title="Peanut" aria-label="Peanut">
-               </button>
+               <button class="slab-preview-swatch peanut" data-color="#C89E7E" data-name="Peanut"
+                  style="background:#C89E7E;"></button>
+
+               <button class="slab-preview-swatch starlight" data-color="#627B79" data-name="Starlight"></button>
             </div>
          </section>
 
@@ -187,6 +151,9 @@
             </div>
 
             <input id="offsetY" type="range" min="-160" max="160" value="0" />
+            <button id="resetBtn" class="slab-preview-button slab-preview-secondary" type="button">
+               Reset Adjustments
+            </button>
          </section>
 
       </section>
