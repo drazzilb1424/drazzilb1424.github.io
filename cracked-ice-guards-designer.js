@@ -1383,93 +1383,108 @@ function showCartStatus(message, isError) {
 }
 
 async function beginSquareCheckout() {
-   async function beginSquareCheckout() {
-      if (cart.length === 0)
-         return;
+   if (cart.length === 0)
+      return;
 
-      if (!CHECKOUT_ENDPOINT) {
-         showCartStatus(
-            'The checkout service has not been configured yet.',
-            true
-         );
-         return;
-      }
+   if (!CHECKOUT_ENDPOINT) {
+      showCartStatus(
+         'The checkout service has not been configured yet.',
+         true
+      );
+      return;
+   }
 
-      // Open the tab immediately so the browser does not block it.
-      const checkoutTab = window.open('', '_blank');
+   // Open immediately while still inside the button click.
+   const checkoutTab = window.open('', 'squareCheckout');
 
-      if (!checkoutTab) {
-         showCartStatus(
-            'Please allow popups for this site to continue to checkout.',
-            true
-         );
-         return;
-      }
+   if (!checkoutTab) {
+      showCartStatus(
+         'Please allow popups for this site to continue to checkout.',
+         true
+      );
+      return;
+   }
 
-      // Show something while the Square checkout is being created.
-      checkoutTab.document.write(`
+   checkoutTab.document.write(`
       <!DOCTYPE html>
-      <html>
+      <html lang="en">
          <head>
+            <meta charset="UTF-8">
             <title>Opening checkout...</title>
          </head>
+
          <body style="
-            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
             display: grid;
             place-items: center;
-            min-height: 100vh;
-            margin: 0;
+            font-family: Arial, sans-serif;
          ">
             <p>Opening secure Square checkout...</p>
          </body>
       </html>
    `);
 
-      checkoutTab.document.close();
+   checkoutTab.document.close();
 
-      cartCheckoutBtn.disabled = true;
-      cartCheckoutBtn.classList.add('loading');
-      showCartStatus('Creating your secure Square checkout...', false);
+   cartCheckoutBtn.disabled = true;
+   cartCheckoutBtn.classList.add('loading');
 
-      try {
-         const response = await fetch(CHECKOUT_ENDPOINT, {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ items: cart })
-         });
+   showCartStatus(
+      'Creating your secure Square checkout...',
+      false
+   );
 
-         const result = await response.json().catch(() => ({}));
+   try {
+      const response = await fetch(CHECKOUT_ENDPOINT, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+            items: cart
+         })
+      });
 
-         if (!response.ok) {
-            throw new Error(
-               result.error || 'Checkout could not be created.'
-            );
-         }
+      const result = await response.json().catch(() => ({}));
 
-         if (!result.checkoutUrl) {
-            throw new Error(
-               'Square did not return a checkout URL.'
-            );
-         }
-
-         // Navigate only the new tab.
-         checkoutTab.location.replace(result.checkoutUrl);
-      } catch (error) {
-         console.error(error);
-
-         checkoutTab.close();
-
-         showCartStatus(
-            error.message ||
-            'Checkout could not be created. Please try again.',
-            true
+      if (!response.ok) {
+         throw new Error(
+            result.error || 'Checkout could not be created.'
          );
-
-         cartCheckoutBtn.disabled = cart.length === 0;
-         cartCheckoutBtn.classList.remove('loading');
       }
+
+      if (!result.checkoutUrl) {
+         throw new Error(
+            'Square did not return a checkout URL.'
+         );
+      }
+
+      // Redirect only the newly opened tab.
+      checkoutTab.location.href = result.checkoutUrl;
+
+      showCartStatus(
+         'Square checkout opened in a new tab.',
+         false
+      );
+
+      cartCheckoutBtn.disabled = false;
+      cartCheckoutBtn.classList.remove('loading');
+   } catch (error) {
+      console.error(error);
+
+      if (!checkoutTab.closed) {
+         checkoutTab.close();
+      }
+
+      showCartStatus(
+         error.message ||
+         'Checkout could not be created. Please try again.',
+         true
+      );
+
+      cartCheckoutBtn.disabled = cart.length === 0;
+      cartCheckoutBtn.classList.remove('loading');
    }
 }
 
