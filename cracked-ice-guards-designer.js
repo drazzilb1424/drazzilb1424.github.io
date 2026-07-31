@@ -1414,10 +1414,21 @@ async function beginSquareCheckout() {
          throw new Error('Square did not return a checkout URL.');
       }
 
-      window.location.assign(result.checkoutUrl);
+      const newTab = window.open(
+         result.checkoutUrl,
+         '_blank',
+         'noopener,noreferrer'
+      );
+
+      if (!newTab) {
+         window.location.assign(result.checkoutUrl);
+      }
    } catch (error) {
       console.error(error);
-      showCartStatus(error.message || 'Checkout could not be created. Please try again.', true);
+      showCartStatus(
+         error.message || 'Checkout could not be created. Please try again.',
+         true
+      );
       cartCheckoutBtn.disabled = cart.length === 0;
       cartCheckoutBtn.classList.remove('loading');
    }
