@@ -946,9 +946,48 @@ body {
 }
 
 #previewCanvas {
-   touch-action: none;
+   touch-action: pan-y;
    user-select: none;
    -webkit-user-select: none;
+}
+
+.slab-canvas-wrapper {
+   position: relative;
+   display: inline-block;
+   width: min(100%, 540px);
+   line-height: 0;
+}
+
+#previewCanvas {
+   width: 100%;
+   max-height: 620px;
+   touch-action: pan-y;
+}
+
+.slab-guard-touch-area {
+   touch-action: none;
+}
+
+.slab-guard-touch-area {
+   position: absolute;
+
+   /*
+      Guard bounds within the 700 × 1000 canvas:
+      x: 70–630
+      y: 30–970
+   */
+   left: 10%;
+   top: 3%;
+   width: 80%;
+   height: 94%;
+
+   z-index: 2;
+   touch-action: none;
+   cursor: grab;
+}
+
+.slab-guard-touch-area:active {
+   cursor: grabbing;
 }
 
 .slab-preview-drag-help {
