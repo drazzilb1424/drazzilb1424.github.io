@@ -24,16 +24,21 @@ let guardColor = {
 };
 const hexValue = document.getElementById('hexValue');
 
-const zoom = document.getElementById('zoom');
-const offsetX = document.getElementById('offsetX');
-const offsetY = document.getElementById('offsetY');
+let slabZoom = 1;
+let slabOffsetX = 0;
+let slabOffsetY = 0;
 
-const zoomValue = document.getElementById('zoomValue');
-const offsetXValue = document.getElementById('offsetXValue');
-const offsetYValue = document.getElementById('offsetYValue');
+let isDraggingSlab = false;
+let previousPointerX = 0;
+let previousPointerY = 0;
 
-const resetBtn = document.getElementById('resetBtn');
+const activePointers = new Map();
+
+let previousPinchDistance = null;
+let previousPinchCenter = null;
+
 const downloadBtn = document.getElementById('downloadBtn');
+const uploadNewBtn = document.getElementById('uploadNewBtn');
 
 let slabImage = null;
 
@@ -274,8 +279,8 @@ function drawPlaceholder() {
    ctx.fillStyle = 'rgba(255,255,255,.9)';
    ctx.textAlign = 'center';
    ctx.font = '800 38px Arial';
-   ctx.fillText('UPLOAD YOUR', 350, 560);
-   ctx.fillText('SLAB IMAGE', 350, 610);
+   ctx.fillText('CLICK UPLOAD', 350, 560);
+   ctx.fillText('BUTTON TO BEGIN', 350, 610);
 }
 
 function drawSlab() {
@@ -288,7 +293,7 @@ function drawSlab() {
    const baseY = 34;
    const baseW = 576;
    const baseH = 932;
-   const scale = Number(zoom.value) / 100;
+   const scale = slabZoom;
 
    const imageRatio = slabImage.naturalWidth / slabImage.naturalHeight;
    const boxRatio = baseW / baseH;
@@ -304,14 +309,29 @@ function drawSlab() {
       drawH = drawW / imageRatio;
    }
 
-   const x = baseX + (baseW - drawW) / 2 + Number(offsetX.value);
-   const y = baseY + (baseH - drawH) / 2 + Number(offsetY.value);
+   const x = baseX + (baseW - drawW) / 2 + slabOffsetX;
+   const y = baseY + (baseH - drawH) / 2 + slabOffsetY;
 
    ctx.save();
    roundedRectPath(ctx, baseX, baseY, baseW, baseH, 28);
    ctx.clip();
    ctx.drawImage(slabImage, x, y, drawW, drawH);
    ctx.restore();
+}
+
+
+function isPointerInsideSlab(position) {
+   const baseX = 62;
+   const baseY = 34;
+   const baseW = 576;
+   const baseH = 932;
+
+   return (
+      position.x >= baseX &&
+      position.x <= baseX + baseW &&
+      position.y >= baseY &&
+      position.y <= baseY + baseH
+   );
 }
 
 function makeGuardLayer() {
@@ -784,6 +804,18 @@ function loadFile(file) {
 
       image.onload = () => {
          slabImage = image;
+
+         slabZoom = 1;
+         slabOffsetX = 0;
+         slabOffsetY = 0;
+
+         activePointers.clear();
+
+         previousPinchDistance = null;
+         previousPinchCenter = null;
+
+         canvas.style.cursor = 'grab';
+
          render();
       };
 
@@ -793,9 +825,71 @@ function loadFile(file) {
    reader.readAsDataURL(file);
 }
 
+function getCanvasPointerPosition(event) {
+   const rect = canvas.getBoundingClientRect();
+
+   return {
+      x:
+         (event.clientX - rect.left) *
+         (canvas.width / rect.width),
+
+      y:
+         (event.clientY - rect.top) *
+         (canvas.height / rect.height)
+   };
+}
+
+function getPinchData() {
+   const points = Array.from(activePointers.values());
+
+   if (points.length < 2)
+      return null;
+
+   const first = points[0];
+   const second = points[1];
+
+   const deltaX = second.x - first.x;
+   const deltaY = second.y - first.y;
+
+   return {
+      distance: Math.hypot(deltaX, deltaY),
+
+      center: {
+         x: (first.x + second.x) / 2,
+         y: (first.y + second.y) / 2
+      }
+   };
+}
+
+uploadNewBtn.addEventListener('click', () => {
+   upload.click();
+});
+
 upload.addEventListener('change', event => {
    loadFile(event.target.files?.[0]);
 });
+
+
+canvas.addEventListener('wheel', event => {
+   if (!slabImage)
+      return;
+
+   event.preventDefault();
+
+   const zoomAmount = 0.08;
+
+   if (event.deltaY < 0) {
+      // Zoom in
+      slabZoom += zoomAmount;
+   } else {
+      // Zoom out
+      slabZoom -= zoomAmount;
+   }
+
+   slabZoom = Math.max(0.75, Math.min(2.5, slabZoom));
+
+   render();
+}, { passive: false });
 
 canvas.addEventListener('dragover', event => {
    event.preventDefault();
@@ -841,57 +935,168 @@ canvas.addEventListener('drop', event => {
       loadFile(file);
 });
 
-canvas.addEventListener('click', event => {
-   const rect = canvas.getBoundingClientRect();
-
-   const scaleX = canvas.width / rect.width;
-   const scaleY = canvas.height / rect.height;
-
-   const x = (event.clientX - rect.left) * scaleX;
-   const y = (event.clientY - rect.top) * scaleY;
-
-   // Same approximate area as the placeholder card.
-   const uploadArea = {
-      x: 130,
-      y: 305,
-      width: 440,
-      height: 560
-   };
-
-   const isInsideUploadArea =
-      x >= uploadArea.x &&
-      x <= uploadArea.x + uploadArea.width &&
-      y >= uploadArea.y &&
-      y <= uploadArea.y + uploadArea.height;
-
-   if (isInsideUploadArea)
-      upload.click();
-});
-
 canvas.addEventListener('mousemove', event => {
-   if (slabImage) {
-      canvas.style.cursor = 'default';
+   if (isDraggingSlab) {
+      canvas.style.cursor = 'grabbing';
       return;
    }
 
-   const rect = canvas.getBoundingClientRect();
+   const position = getCanvasPointerPosition(event);
 
-   const scaleX = canvas.width / rect.width;
-   const scaleY = canvas.height / rect.height;
-
-   const x = (event.clientX - rect.left) * scaleX;
-   const y = (event.clientY - rect.top) * scaleY;
-
-   const isInsideUploadArea =
-      x >= 130 &&
-      x <= 570 &&
-      y >= 305 &&
-      y <= 865;
-
-   canvas.style.cursor = isInsideUploadArea
-      ? 'pointer'
-      : 'default';
+   if (slabImage) {
+      canvas.style.cursor =
+         isPointerInsideSlab(position)
+            ? 'grab'
+            : 'default';
+   } else {
+      canvas.style.cursor = 'default';
+   }
 });
+
+canvas.addEventListener('pointerdown', event => {
+   if (!slabImage)
+      return;
+
+   const position = getCanvasPointerPosition(event);
+
+   if (!isPointerInsideSlab(position))
+      return;
+
+   activePointers.set(event.pointerId, position);
+
+   canvas.setPointerCapture(event.pointerId);
+
+   if (activePointers.size === 1) {
+      isDraggingSlab = true;
+      previousPointerX = position.x;
+      previousPointerY = position.y;
+
+      canvas.style.cursor = 'grabbing';
+   }
+
+   if (activePointers.size === 2) {
+      isDraggingSlab = false;
+
+      const pinch = getPinchData();
+
+      previousPinchDistance = pinch?.distance ?? null;
+      previousPinchCenter = pinch?.center ?? null;
+   }
+
+   event.preventDefault();
+});
+
+canvas.addEventListener('pointermove', event => {
+   if (!activePointers.has(event.pointerId))
+      return;
+
+   const position = getCanvasPointerPosition(event);
+
+   activePointers.set(event.pointerId, position);
+
+   if (activePointers.size === 1 && isDraggingSlab) {
+      const deltaX = position.x - previousPointerX;
+      const deltaY = position.y - previousPointerY;
+
+      slabOffsetX += deltaX;
+      slabOffsetY += deltaY;
+
+      previousPointerX = position.x;
+      previousPointerY = position.y;
+
+      render();
+   }
+
+   if (activePointers.size === 2) {
+      const pinch = getPinchData();
+
+      if (
+         !pinch ||
+         previousPinchDistance === null ||
+         previousPinchCenter === null
+      ) {
+         previousPinchDistance = pinch?.distance ?? null;
+         previousPinchCenter = pinch?.center ?? null;
+         return;
+      }
+
+      const oldZoom = slabZoom;
+
+      const scaleChange =
+         pinch.distance / previousPinchDistance;
+
+      slabZoom *= scaleChange;
+      slabZoom = Math.max(0.75, Math.min(2.5, slabZoom));
+
+      const actualScaleChange = slabZoom / oldZoom;
+
+      slabOffsetX =
+         pinch.center.x -
+         (pinch.center.x - slabOffsetX) * actualScaleChange;
+
+      slabOffsetY =
+         pinch.center.y -
+         (pinch.center.y - slabOffsetY) * actualScaleChange;
+
+      slabOffsetX +=
+         pinch.center.x - previousPinchCenter.x;
+
+      slabOffsetY +=
+         pinch.center.y - previousPinchCenter.y;
+
+      previousPinchDistance = pinch.distance;
+      previousPinchCenter = pinch.center;
+
+      render();
+   }
+
+   event.preventDefault();
+});
+
+function removeActivePointer(event) {
+   activePointers.delete(event.pointerId);
+
+   if (
+      canvas.hasPointerCapture(event.pointerId)
+   ) {
+      canvas.releasePointerCapture(event.pointerId);
+   }
+
+   if (activePointers.size === 1) {
+      const remainingPoint =
+         Array.from(activePointers.values())[0];
+
+      isDraggingSlab = true;
+      previousPointerX = remainingPoint.x;
+      previousPointerY = remainingPoint.y;
+
+      previousPinchDistance = null;
+      previousPinchCenter = null;
+
+      canvas.style.cursor = 'grabbing';
+   } else {
+      isDraggingSlab = false;
+
+      previousPinchDistance = null;
+      previousPinchCenter = null;
+
+      canvas.style.cursor =
+         slabImage ? 'grab' : 'default';
+   }
+}
+
+canvas.addEventListener('lostpointercapture', event => {
+   activePointers.delete(event.pointerId);
+
+   if (activePointers.size === 0) {
+      isDraggingSlab = false;
+      previousPinchDistance = null;
+      previousPinchCenter = null;
+   }
+});
+
+canvas.addEventListener('pointerup', removeActivePointer);
+canvas.addEventListener('pointercancel', removeActivePointer);
 
 document
    .getElementById('swatches')
@@ -946,28 +1151,6 @@ document
          render();
       }
    });
-
-[zoom, offsetX, offsetY].forEach(input => {
-   input.addEventListener('input', () => {
-      zoomValue.textContent = `${zoom.value}%`;
-      offsetXValue.textContent = offsetX.value;
-      offsetYValue.textContent = offsetY.value;
-
-      render();
-   });
-});
-
-resetBtn.addEventListener('click', () => {
-   zoom.value = 100;
-   offsetX.value = 0;
-   offsetY.value = 0;
-
-   zoomValue.textContent = '100%';
-   offsetXValue.textContent = '0';
-   offsetYValue.textContent = '0';
-
-   render();
-});
 
 downloadBtn.addEventListener('click', () => {
    render();
