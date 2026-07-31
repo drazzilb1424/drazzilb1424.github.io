@@ -4,6 +4,7 @@ let cachedInnerEdgeLayer = null;
 let cachedGuardColor = null;
 
 const renderOverlay = document.getElementById('renderOverlay');
+const guardTouchArea = document.getElementById('guardTouchArea');
 
 function showRenderSpinner() {
    renderOverlay?.classList.remove('hidden');
@@ -953,25 +954,21 @@ canvas.addEventListener('mousemove', event => {
    }
 });
 
-canvas.addEventListener('pointerdown', event => {
+guardTouchArea.addEventListener('pointerdown', event => {
    if (!slabImage)
       return;
 
    const position = getCanvasPointerPosition(event);
 
-   if (!isPointerInsideSlab(position))
-      return;
-
    activePointers.set(event.pointerId, position);
-
-   canvas.setPointerCapture(event.pointerId);
+   guardTouchArea.setPointerCapture(event.pointerId);
 
    if (activePointers.size === 1) {
       isDraggingSlab = true;
       previousPointerX = position.x;
       previousPointerY = position.y;
 
-      canvas.style.cursor = 'grabbing';
+      guardTouchArea.style.cursor = 'grabbing';
    }
 
    if (activePointers.size === 2) {
@@ -986,7 +983,7 @@ canvas.addEventListener('pointerdown', event => {
    event.preventDefault();
 });
 
-canvas.addEventListener('pointermove', event => {
+guardTouchArea.addEventListener('pointermove', event => {
    if (!activePointers.has(event.pointerId))
       return;
 
@@ -1056,10 +1053,8 @@ canvas.addEventListener('pointermove', event => {
 function removeActivePointer(event) {
    activePointers.delete(event.pointerId);
 
-   if (
-      canvas.hasPointerCapture(event.pointerId)
-   ) {
-      canvas.releasePointerCapture(event.pointerId);
+   if (guardTouchArea.hasPointerCapture(event.pointerId)) {
+      guardTouchArea.releasePointerCapture(event.pointerId);
    }
 
    if (activePointers.size === 1) {
@@ -1073,30 +1068,33 @@ function removeActivePointer(event) {
       previousPinchDistance = null;
       previousPinchCenter = null;
 
-      canvas.style.cursor = 'grabbing';
+      guardTouchArea.style.cursor = 'grabbing';
    } else {
       isDraggingSlab = false;
 
       previousPinchDistance = null;
       previousPinchCenter = null;
 
-      canvas.style.cursor =
+      guardTouchArea.style.cursor =
          slabImage ? 'grab' : 'default';
    }
 }
 
-canvas.addEventListener('lostpointercapture', event => {
+guardTouchArea.addEventListener('lostpointercapture', event => {
    activePointers.delete(event.pointerId);
 
    if (activePointers.size === 0) {
       isDraggingSlab = false;
       previousPinchDistance = null;
       previousPinchCenter = null;
+
+      guardTouchArea.style.cursor =
+         slabImage ? 'grab' : 'default';
    }
 });
 
-canvas.addEventListener('pointerup', removeActivePointer);
-canvas.addEventListener('pointercancel', removeActivePointer);
+guardTouchArea.addEventListener('pointerup', removeActivePointer);
+guardTouchArea.addEventListener('pointercancel', removeActivePointer);
 
 document
    .getElementById('swatches')
