@@ -1,3 +1,8 @@
+let cachedGuardLayer = null;
+let cachedDividerLayer = null;
+let cachedInnerEdgeLayer = null;
+let cachedGuardColor = null;
+
 const canvas = document.getElementById('previewCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -22,6 +27,159 @@ const downloadBtn = document.getElementById('downloadBtn');
 
 let slabImage = null;
 
+function rebuildGuardLayersIfNeeded() {
+   const color = guardColor.value.toUpperCase();
+
+   if (
+      cachedGuardLayer &&
+      cachedDividerLayer &&
+      cachedInnerEdgeLayer &&
+      cachedGuardColor === color
+   ) {
+      return;
+   }
+
+   cachedDividerLayer = makeDividerLayer();
+   cachedInnerEdgeLayer = makeInnerEdgeLayer();
+   cachedGuardLayer = makeGuardLayer();
+   cachedGuardColor = color;
+}
+
+function seededRandom(seed) {
+   let value = seed;
+
+   return () => {
+      value = Math.sin(value) * 20;
+      return value - Math.floor(value);
+   };
+}
+
+function drawGalaxySparklesInRect(
+   context,
+   x,
+   y,
+   width,
+   height,
+   count,
+   seed
+) {
+   context.save();
+
+   context.beginPath();
+   context.rect(x, y, width, height);
+   context.clip();
+
+   const random = seededRandom(seed);
+
+   const sparkleColors = [
+      'rgba(32,220,255,.95)',
+      'rgba(77,240,255,.85)',
+      'rgba(185,250,255,.95)',
+      'rgba(255,255,255,.85)'
+   ];
+
+   for (let i = 0; i < count; i++) {
+      const sparkleX = x + random() * width;
+      const sparkleY = y + random() * height;
+
+      const radius =
+         random() > 0.94
+            ? 0.6 + random() * 0.5
+            : 0.2 + random() * 0.2;
+
+      context.beginPath();
+      context.arc(
+         sparkleX,
+         sparkleY,
+         radius,
+         0,
+         Math.PI * 2
+      );
+
+      context.fillStyle =
+         sparkleColors[
+         Math.floor(random() * sparkleColors.length)
+         ];
+
+      context.fill();
+   }
+
+   context.restore();
+}
+
+function drawGalaxySparkles(
+   context,
+   outerX,
+   outerY,
+   outerW,
+   outerH,
+   outerRadius,
+   thickness
+) {
+   context.save();
+
+   // Clip the sparkles so they only appear on the guard frame.
+   context.beginPath();
+
+   context.roundRect(
+      outerX,
+      outerY,
+      outerW,
+      outerH,
+      outerRadius
+   );
+
+   context.roundRect(
+      outerX + thickness,
+      outerY + thickness,
+      outerW - thickness * 2,
+      outerH - thickness * 2,
+      Math.max(4, outerRadius - thickness)
+   );
+
+   context.clip('evenodd');
+
+   // Seeded randomness prevents the sparkles from moving every render.
+   const random = seededRandom(1847);
+
+   const sparkleColors = [
+      'rgba(32, 220, 255, 0.95)',
+      'rgba(77, 240, 255, 0.85)',
+      'rgba(185, 250, 255, 0.95)',
+      'rgba(255, 255, 255, 0.85)'
+   ];
+
+   for (let i = 0; i < 12000; i++) {
+      const x = outerX + random() * outerW;
+      const y = outerY + random() * outerH;
+
+      // Most flakes are very small.
+      const radius =
+         random() > 0.94
+            ? 0.6 + random() * 0.5
+            : 0.2 + random() * 0.2;
+
+      const colorIndex = Math.floor(
+         random() * sparkleColors.length
+      );
+
+      context.beginPath();
+      context.arc(x, y, radius, 0, Math.PI * 2);
+      context.fillStyle = sparkleColors[colorIndex];
+      context.fill();
+
+      // Occasional soft glow around larger flakes.
+      if (radius > 1.4) {
+         context.beginPath();
+         context.arc(x, y, radius * 2.2, 0, Math.PI * 2);
+         context.fillStyle = 'rgba(50, 210, 255, 0.12)';
+         context.fill();
+      }
+   }
+
+   context.restore();
+}
+
 function roundedRectPath(context, x, y, w, h, r) {
    const radius = Math.min(r, w / 2, h / 2);
    context.beginPath();
@@ -44,28 +202,8 @@ function shade(hex, amount) {
 
 function drawPlaceholder() {
    const grad = ctx.createLinearGradient(0, 105, 0, 900);
-   // grad.addColorStop(0, '#f7f8fa');
-   // grad.addColorStop(1, '#d7dbe2');
-   // ctx.fillStyle = grad;
-   // roundedRectPath(ctx, 82, 52, 536, 896, 24);
-   // ctx.fill();
-
-   // ctx.fillStyle = '#e31d2b';
-   // roundedRectPath(ctx, 100, 80, 500, 166, 10);
-   // ctx.fill();
-
-   // ctx.fillStyle = '#fff';
-   // ctx.font = '700 48px Arial';
-   // ctx.textAlign = 'left';
-   // ctx.fillText('PSA', 128, 154);
-   // ctx.font = '700 22px Arial';
-   // ctx.fillText('GEM MINT 10', 128, 198);
-
-   // ctx.fillStyle = '#f3f4f6';
-   // roundedRectPath(ctx, 111, 280, 478, 610, 12);
-   // ctx.fill();
-
    const cardGrad = ctx.createLinearGradient(120, 300, 570, 880);
+
    cardGrad.addColorStop(0, '#243a73');
    cardGrad.addColorStop(.45, '#f3b236');
    cardGrad.addColorStop(1, '#74242a');
@@ -123,8 +261,8 @@ function makeGuardLayer() {
    const g = layer.getContext('2d');
 
    const color = guardColor.value;
-   const isStarlight =
-      color.toUpperCase() === '#627B79';
+   const isStarlight = color.toUpperCase() === '#627B79';
+   const isGalaxyBlue = color.toUpperCase() === '#4B4D8E';
 
    const thickness = 22;
 
@@ -157,6 +295,21 @@ function makeGuardLayer() {
       gradient.addColorStop(0.82, '#225f55');
 
       g.strokeStyle = gradient;
+   } else if (isGalaxyBlue) {
+      const galaxyGradient = g.createLinearGradient(
+         outerX,
+         outerY,
+         outerX + outerW,
+         outerY + outerH
+      );
+
+      galaxyGradient.addColorStop(0.00, '#151936');
+      galaxyGradient.addColorStop(0.25, '#161a3b');
+      galaxyGradient.addColorStop(0.48, '#13142e');
+      galaxyGradient.addColorStop(0.68, '#191c3b');
+      galaxyGradient.addColorStop(1.00, '#11152f');
+
+      g.strokeStyle = galaxyGradient;
    } else {
       g.strokeStyle = color;
    }
@@ -181,13 +334,7 @@ function makeGuardLayer() {
          outerY + outerH
       );
 
-      // shine.addColorStop(0.00, 'rgba(0, 0, 0, 0)');
-      // shine.addColorStop(0.32, 'rgba(35, 130, 116, 0.03)');
-      // shine.addColorStop(0.40, 'rgba(42,170,140,.18)');
       shine.addColorStop(0.50, 'rgba(95,255,210,.45)');
-      // shine.addColorStop(0.58, 'rgba(180,255,230,.28)');
-      // shine.addColorStop(0.63, 'rgba(50, 180, 159, 0.15)');
-      // shine.addColorStop(1.00, 'rgba(0, 0, 0, 0)');
 
       g.save();
 
@@ -237,6 +384,18 @@ function makeGuardLayer() {
 
    g.stroke();
 
+   if (isGalaxyBlue) {
+      drawGalaxySparkles(
+         g,
+         outerX,
+         outerY,
+         outerW,
+         outerH,
+         outerRadius,
+         thickness
+      );
+   }
+
    return layer;
 }
 
@@ -250,8 +409,8 @@ function makeDividerLayer() {
    const g = layer.getContext('2d');
 
    const color = guardColor.value;
-   const isStarlight =
-      color.toUpperCase() === '#627B79';
+   const isStarlight = color.toUpperCase() === '#627B79';
+   const isGalaxyBlue = color.toUpperCase() === '#4B4D8E';
 
    const thickness = 22;
 
@@ -261,6 +420,16 @@ function makeDividerLayer() {
    const dividerY = 245;
    const dividerThickness = 50;
 
+   const dividerX =
+      outerX + thickness / 2 + 10;
+
+   const dividerTop =
+      dividerY - dividerThickness / 2;
+
+   const dividerWidth =
+      outerW - thickness - leftInset;
+
+   // Set the main divider color before drawing it.
    if (isStarlight) {
       const gradient = g.createLinearGradient(
          outerX,
@@ -276,15 +445,30 @@ function makeDividerLayer() {
       gradient.addColorStop(0.82, '#225f55');
 
       g.fillStyle = gradient;
+   } else if (isGalaxyBlue) {
+      const galaxyGradient = g.createLinearGradient(
+         outerX,
+         dividerY,
+         outerX + outerW,
+         dividerY
+      );
+
+      galaxyGradient.addColorStop(0.00, '#151936');
+      galaxyGradient.addColorStop(0.25, '#161a3b');
+      galaxyGradient.addColorStop(0.48, '#13142e');
+      galaxyGradient.addColorStop(0.68, '#191c3b');
+      galaxyGradient.addColorStop(1.00, '#11152f');
+
+      g.fillStyle = galaxyGradient;
    } else {
       g.fillStyle = color;
    }
 
    roundedRectPath(
       g,
-      outerX + thickness / 2 + 10,
-      dividerY - dividerThickness / 2,
-      outerW - thickness - leftInset,
+      dividerX,
+      dividerTop,
+      dividerWidth,
       dividerThickness,
       0
    );
@@ -313,15 +497,28 @@ function makeDividerLayer() {
 
       roundedRectPath(
          g,
-         outerX + thickness / 2 + 10,
-         dividerY - dividerThickness / 2,
-         outerW - thickness - leftInset,
+         dividerX,
+         dividerTop,
+         dividerWidth,
          dividerThickness,
          0
       );
 
       g.fill();
       g.restore();
+   }
+
+   // Add Galaxy Blue sparkles over the divider.
+   if (isGalaxyBlue) {
+      drawGalaxySparklesInRect(
+         g,
+         dividerX,
+         dividerTop,
+         dividerWidth,
+         dividerThickness,
+         250,
+         2841
+      );
    }
 
    return layer;
@@ -346,8 +543,8 @@ function makeInnerEdgeLayer() {
    // Width of the translucent area visible along the inside edge.
    const innerEdgeWidth = 16;
 
-   const isStarlight =
-      color.toUpperCase() === '#627B79';
+   const isStarlight = color.toUpperCase() === '#627B79';
+   const isGalaxyBlue = color.toUpperCase() === '#4B4D8E';
 
    if (isStarlight) {
       const innerGradient = g.createLinearGradient(
@@ -364,6 +561,21 @@ function makeInnerEdgeLayer() {
       innerGradient.addColorStop(1.00, '#111719');
 
       g.strokeStyle = innerGradient;
+   } else if (isGalaxyBlue) {
+      const galaxyGradient = g.createLinearGradient(
+         outerX,
+         outerY,
+         outerX + outerW,
+         outerY + outerH
+      );
+
+      galaxyGradient.addColorStop(0.00, '#151936');
+      galaxyGradient.addColorStop(0.25, '#161a3b');
+      galaxyGradient.addColorStop(0.48, '#13142e');
+      galaxyGradient.addColorStop(0.68, '#191c3b');
+      galaxyGradient.addColorStop(1.00, '#11152f');
+
+      g.strokeStyle = galaxyGradient;
    } else {
       g.strokeStyle = color;
    }
@@ -383,6 +595,18 @@ function makeInnerEdgeLayer() {
 
    g.stroke();
 
+   if (isGalaxyBlue) {
+      drawGalaxySparkles(
+         g,
+         outerX + thickness - overlap,
+         outerY + thickness - overlap,
+         outerW - ((thickness - overlap) * 2),
+         outerH - ((thickness - overlap) * 2),
+         Math.max(4, outerRadius),
+         innerEdgeWidth
+      );
+   }
+
    return layer;
 }
 
@@ -395,28 +619,58 @@ function render() {
    const drawX = (canvas.width - drawW) / 2;
    const drawY = (canvas.height - drawH) / 2;
 
-   const dividerLayer = makeDividerLayer();
-   const innerEdgeLayer = makeInnerEdgeLayer();
-   const guardLayer = makeGuardLayer();
+   rebuildGuardLayersIfNeeded();
 
    // Physical pieces behind the slab.
-   ctx.drawImage(dividerLayer, drawX, drawY, drawW, drawH);
-   ctx.drawImage(innerEdgeLayer, drawX, drawY, drawW, drawH);
+   ctx.drawImage(
+      cachedDividerLayer,
+      drawX,
+      drawY,
+      drawW,
+      drawH
+   );
 
-   // Slab sits over them.
+   ctx.drawImage(
+      cachedInnerEdgeLayer,
+      drawX,
+      drawY,
+      drawW,
+      drawH
+   );
+
+   // Slab image is the only part affected by the sliders.
    drawSlab();
 
-   // Simulate seeing the pieces through the clear plastic.
+   // Simulate seeing the pieces through the clear slab.
    ctx.save();
    ctx.globalAlpha = 0.5;
 
-   ctx.drawImage(dividerLayer, drawX, drawY, drawW, drawH);
-   ctx.drawImage(innerEdgeLayer, drawX, drawY, drawW, drawH);
+   ctx.drawImage(
+      cachedDividerLayer,
+      drawX,
+      drawY,
+      drawW,
+      drawH
+   );
+
+   ctx.drawImage(
+      cachedInnerEdgeLayer,
+      drawX,
+      drawY,
+      drawW,
+      drawH
+   );
 
    ctx.restore();
 
    // Solid outer guard stays in front.
-   ctx.drawImage(guardLayer, drawX, drawY, drawW, drawH);
+   ctx.drawImage(
+      cachedGuardLayer,
+      drawX,
+      drawY,
+      drawW,
+      drawH
+   );
 }
 
 function loadFile(file) {
@@ -591,6 +845,11 @@ document
          return;
 
       guardColor.value = button.dataset.color;
+
+      cachedGuardLayer = null;
+      cachedDividerLayer = null;
+      cachedInnerEdgeLayer = null;
+      cachedGuardColor = null;
 
       hexValue.textContent = button.dataset.name;
       document.documentElement.style.setProperty(
