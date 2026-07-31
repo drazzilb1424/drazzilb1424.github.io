@@ -1443,6 +1443,18 @@ async function beginSquareCheckout() {
    }
 }
 
+function resetCheckoutButton() {
+   cartCheckoutBtn.disabled = cart.length === 0;
+   cartCheckoutBtn.classList.remove('loading');
+
+   cartStatus.textContent = '';
+   cartStatus.classList.add('hidden');
+   cartStatus.classList.remove('error');
+}
+
+window.addEventListener('pageshow', resetCheckoutButton);
+
+
 guardQuantity.addEventListener('input', updateCheckoutSummary);
 guardQuantity.addEventListener('blur', updateCheckoutSummary);
 customTextEnabled.addEventListener('change', updateCheckoutSummary);
