@@ -303,6 +303,14 @@ input[type="range"]::-webkit-slider-thumb {
    margin-top: 8px;
 }
 
+.slab-preview-actions {
+   grid-column: 1;
+
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
+
 .slab-preview-button {
    min-height: 47px;
    padding: 0 16px;
@@ -936,6 +944,19 @@ body {
 
 .slab-preview-checkout .hidden {
    display: none;
+}
+
+#previewCanvas {
+   touch-action: none;
+   user-select: none;
+   -webkit-user-select: none;
+}
+
+.slab-preview-drag-help {
+   margin: 12px 0 0;
+   color: var(--slab-preview-muted);
+   font-size: 0.82rem;
+   text-align: center;
 }
 
 @media (max-width: 480px) {
