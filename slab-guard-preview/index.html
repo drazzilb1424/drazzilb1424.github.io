@@ -59,9 +59,16 @@
       </header>
 
       <section class="slab-preview-shell">
-         <button id="downloadBtn" class="slab-preview-button slab-preview-primary" type="button">
-            Download Preview
-         </button>
+         <div class="slab-preview-actions">
+            <button id="downloadBtn" class="slab-preview-button slab-preview-primary" type="button">
+               Download Preview
+            </button>
+
+            <button id="uploadNewBtn" class="slab-preview-button slab-preview-secondary" type="button">
+               <i class="fa-solid fa-upload"></i>
+               Upload New Image
+            </button>
+         </div>
 
          <section class="slab-preview-panel slab-preview-card">
             <div class="slab-preview-header">
@@ -195,33 +202,6 @@
             <p class="slab-preview-checkout-note">
                Shipping and applicable taxes are handled during Square checkout.
             </p>
-         </section>
-
-         <section class="slab-preview-panel slab-preview-adjustments">
-            <div class="slab-preview-label-row">
-               <label for="zoom">Slab zoom</label>
-               <span class="slab-preview-value" id="zoomValue">100%</span>
-            </div>
-
-            <input id="zoom" type="range" min="75" max="150" value="100" />
-
-            <div class="slab-preview-label-row slab-preview-spaced">
-               <label for="offsetX">Horizontal position</label>
-               <span class="slab-preview-value" id="offsetXValue">0</span>
-            </div>
-
-            <input id="offsetX" type="range" min="-120" max="120" value="0" />
-
-            <div class="slab-preview-label-row slab-preview-spaced">
-               <label for="offsetY">Vertical position</label>
-               <span class="slab-preview-value" id="offsetYValue">0</span>
-            </div>
-
-            <input id="offsetY" type="range" min="-160" max="160" value="0" />
-
-            <button id="resetBtn" class="slab-preview-button slab-preview-secondary" type="button">
-               Reset Adjustments
-            </button>
          </section>
       </section>
    </main>
