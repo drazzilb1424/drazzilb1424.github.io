@@ -1406,9 +1406,6 @@ async function beginSquareCheckout() {
          return;
       }
 
-      // Prevent the new page from controlling the original tab.
-      checkoutTab.opener = null;
-
       // Show something while the Square checkout is being created.
       checkoutTab.document.write(`
       <!DOCTYPE html>
