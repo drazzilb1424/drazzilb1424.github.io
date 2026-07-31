@@ -87,7 +87,11 @@
             </div>
 
             <div class="slab-preview-stage">
-               <canvas id="previewCanvas" width="700" height="1000"></canvas>
+               <div class="slab-canvas-wrapper">
+                  <canvas id="previewCanvas" width="700" height="1000"></canvas>
+
+                  <div id="guardTouchArea" class="slab-guard-touch-area" aria-hidden="true"></div>
+               </div>
 
                <div id="renderOverlay" class="slab-render-overlay hidden">
                   <div class="slab-render-spinner"></div>
