@@ -1391,11 +1391,23 @@ async function beginSquareCheckout() {
       return;
    }
 
+   // Open the tab immediately while we're still in the click event.
+   const checkoutTab = window.open('', '_blank', 'noopener');
+
+   if (!checkoutTab) {
+      showCartStatus(
+         'Please allow popups for this site to continue to checkout.',
+         true
+      );
+      return;
+   }
+
    cartCheckoutBtn.disabled = true;
    cartCheckoutBtn.classList.add('loading');
    showCartStatus('Creating your secure Square checkout...', false);
 
    try {
+
       const response = await fetch(CHECKOUT_ENDPOINT, {
          method: 'POST',
          headers: {
@@ -1414,15 +1426,7 @@ async function beginSquareCheckout() {
          throw new Error('Square did not return a checkout URL.');
       }
 
-      const newTab = window.open(
-         result.checkoutUrl,
-         '_blank',
-         'noopener,noreferrer'
-      );
-
-      if (!newTab) {
-         window.location.assign(result.checkoutUrl);
-      }
+      checkoutTab.location.href = result.checkoutUrl;
    } catch (error) {
       console.error(error);
       showCartStatus(
