@@ -1383,58 +1383,96 @@ function showCartStatus(message, isError) {
 }
 
 async function beginSquareCheckout() {
-   if (cart.length === 0)
-      return;
+   async function beginSquareCheckout() {
+      if (cart.length === 0)
+         return;
 
-   if (!CHECKOUT_ENDPOINT) {
-      showCartStatus('The checkout service has not been configured yet.', true);
-      return;
-   }
-
-   // Open the tab immediately while we're still in the click event.
-   const checkoutTab = window.open('', '_blank', 'noopener');
-
-   if (!checkoutTab) {
-      showCartStatus(
-         'Please allow popups for this site to continue to checkout.',
-         true
-      );
-      return;
-   }
-
-   cartCheckoutBtn.disabled = true;
-   cartCheckoutBtn.classList.add('loading');
-   showCartStatus('Creating your secure Square checkout...', false);
-
-   try {
-
-      const response = await fetch(CHECKOUT_ENDPOINT, {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify({ items: cart })
-      });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-         throw new Error(result.error || 'Checkout could not be created.');
+      if (!CHECKOUT_ENDPOINT) {
+         showCartStatus(
+            'The checkout service has not been configured yet.',
+            true
+         );
+         return;
       }
 
-      if (!result.checkoutUrl) {
-         throw new Error('Square did not return a checkout URL.');
+      // Open the tab immediately so the browser does not block it.
+      const checkoutTab = window.open('', '_blank');
+
+      if (!checkoutTab) {
+         showCartStatus(
+            'Please allow popups for this site to continue to checkout.',
+            true
+         );
+         return;
       }
 
-      checkoutTab.location.href = result.checkoutUrl;
-   } catch (error) {
-      console.error(error);
-      showCartStatus(
-         error.message || 'Checkout could not be created. Please try again.',
-         true
-      );
-      cartCheckoutBtn.disabled = cart.length === 0;
-      cartCheckoutBtn.classList.remove('loading');
+      // Prevent the new page from controlling the original tab.
+      checkoutTab.opener = null;
+
+      // Show something while the Square checkout is being created.
+      checkoutTab.document.write(`
+      <!DOCTYPE html>
+      <html>
+         <head>
+            <title>Opening checkout...</title>
+         </head>
+         <body style="
+            font-family: Arial, sans-serif;
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            margin: 0;
+         ">
+            <p>Opening secure Square checkout...</p>
+         </body>
+      </html>
+   `);
+
+      checkoutTab.document.close();
+
+      cartCheckoutBtn.disabled = true;
+      cartCheckoutBtn.classList.add('loading');
+      showCartStatus('Creating your secure Square checkout...', false);
+
+      try {
+         const response = await fetch(CHECKOUT_ENDPOINT, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ items: cart })
+         });
+
+         const result = await response.json().catch(() => ({}));
+
+         if (!response.ok) {
+            throw new Error(
+               result.error || 'Checkout could not be created.'
+            );
+         }
+
+         if (!result.checkoutUrl) {
+            throw new Error(
+               'Square did not return a checkout URL.'
+            );
+         }
+
+         // Navigate only the new tab.
+         checkoutTab.location.replace(result.checkoutUrl);
+      } catch (error) {
+         console.error(error);
+
+         checkoutTab.close();
+
+         showCartStatus(
+            error.message ||
+            'Checkout could not be created. Please try again.',
+            true
+         );
+
+         cartCheckoutBtn.disabled = cart.length === 0;
+         cartCheckoutBtn.classList.remove('loading');
+      }
    }
 }
 
