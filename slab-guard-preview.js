@@ -3,6 +3,16 @@ let cachedDividerLayer = null;
 let cachedInnerEdgeLayer = null;
 let cachedGuardColor = null;
 
+const renderOverlay = document.getElementById('renderOverlay');
+
+function showRenderSpinner() {
+   renderOverlay?.classList.remove('hidden');
+}
+
+function hideRenderSpinner() {
+   renderOverlay?.classList.add('hidden');
+}
+
 const canvas = document.getElementById('previewCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -26,6 +36,67 @@ const resetBtn = document.getElementById('resetBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 
 let slabImage = null;
+
+const GALAXY_STYLES = {
+   '#4B4D8E': {
+      gradient: ['#151936', '#161a3b', '#13142e', '#191c3b', '#11152f'],
+      sparkles: [
+         'rgba(32,220,255,.95)',
+         'rgba(77,240,255,.85)',
+         'rgba(185,250,255,.95)',
+         'rgba(255,255,255,.85)'
+      ],
+      glow: 'rgba(50,210,255,.12)'
+   },
+
+   '#174A36': {
+      gradient: ['#0b241b', '#123c2c', '#0d3023', '#174a36', '#091f17'],
+      sparkles: [
+         'rgba(235,235,235,.95)',
+         'rgba(210,210,210,.90)',
+         'rgba(70,220,120,.90)',
+         'rgba(150,255,190,.85)'
+      ],
+      glow: 'rgba(70,220,120,.12)'
+   },
+
+   '#17191C': {
+      gradient: ['#090909', '#1a1a1a', '#101010', '#232323', '#080808'],
+      sparkles: [
+         'rgba(255,255,255,.92)',
+         'rgba(225,225,225,.90)',
+         'rgba(195,195,195,.85)',
+         'rgba(240,240,240,.82)'
+      ],
+      glow: 'rgba(255,255,255,.08)'
+   },
+
+   '#7A2028': {
+      gradient: ['#be3243', '#c4293b', '#cc2b38', '#b81f31', '#be2a40'],
+      sparkles: [
+         'rgba(255,255,255,.92)',
+         'rgba(230,230,230,.90)',
+         'rgba(205,205,205,.88)',
+         'rgba(240,240,240,.85)'
+      ],
+      glow: 'rgba(255,255,255,.08)'
+   },
+
+   '#5B6068': {
+      gradient: ['#36393e', '#555b63', '#666b73', '#4c5057', '#2d3035'],
+      sparkles: [
+         'rgba(255,255,255,.92)',
+         'rgba(235,235,235,.90)',
+         'rgba(210,210,210,.88)',
+         'rgba(245,245,245,.84)'
+      ],
+      glow: 'rgba(255,255,255,.08)'
+   }
+};
+
+function getGalaxyStyle(color) {
+   return GALAXY_STYLES[color.toUpperCase()] ?? null;
+}
 
 function rebuildGuardLayersIfNeeded() {
    const color = guardColor.value.toUpperCase();
@@ -61,7 +132,8 @@ function drawGalaxySparklesInRect(
    width,
    height,
    count,
-   seed
+   seed,
+   sparkleColors
 ) {
    context.save();
 
@@ -70,13 +142,6 @@ function drawGalaxySparklesInRect(
    context.clip();
 
    const random = seededRandom(seed);
-
-   const sparkleColors = [
-      'rgba(32,220,255,.95)',
-      'rgba(77,240,255,.85)',
-      'rgba(185,250,255,.95)',
-      'rgba(255,255,255,.85)'
-   ];
 
    for (let i = 0; i < count; i++) {
       const sparkleX = x + random() * width;
@@ -114,7 +179,9 @@ function drawGalaxySparkles(
    outerW,
    outerH,
    outerRadius,
-   thickness
+   thickness,
+   sparkleColors,
+   glowColor
 ) {
    context.save();
 
@@ -142,22 +209,15 @@ function drawGalaxySparkles(
    // Seeded randomness prevents the sparkles from moving every render.
    const random = seededRandom(1847);
 
-   const sparkleColors = [
-      'rgba(32, 220, 255, 0.95)',
-      'rgba(77, 240, 255, 0.85)',
-      'rgba(185, 250, 255, 0.95)',
-      'rgba(255, 255, 255, 0.85)'
-   ];
-
    for (let i = 0; i < 12000; i++) {
       const x = outerX + random() * outerW;
       const y = outerY + random() * outerH;
 
       // Most flakes are very small.
       const radius =
-         random() > 0.94
-            ? 0.6 + random() * 0.5
-            : 0.2 + random() * 0.2;
+         random() > 0.97
+            ? 0.75 + random() * 0.65
+            : 0.25 + random() * 0.23;
 
       const colorIndex = Math.floor(
          random() * sparkleColors.length
@@ -172,7 +232,7 @@ function drawGalaxySparkles(
       if (radius > 1.4) {
          context.beginPath();
          context.arc(x, y, radius * 2.2, 0, Math.PI * 2);
-         context.fillStyle = 'rgba(50, 210, 255, 0.12)';
+         context.fillStyle = glowColor;
          context.fill();
       }
    }
@@ -262,7 +322,8 @@ function makeGuardLayer() {
 
    const color = guardColor.value;
    const isStarlight = color.toUpperCase() === '#627B79';
-   const isGalaxyBlue = color.toUpperCase() === '#4B4D8E';
+   const galaxyStyle = getGalaxyStyle(color);
+   const isGalaxy = galaxyStyle !== null;
 
    const thickness = 22;
 
@@ -295,7 +356,7 @@ function makeGuardLayer() {
       gradient.addColorStop(0.82, '#225f55');
 
       g.strokeStyle = gradient;
-   } else if (isGalaxyBlue) {
+   } else if (isGalaxy) {
       const galaxyGradient = g.createLinearGradient(
          outerX,
          outerY,
@@ -303,11 +364,12 @@ function makeGuardLayer() {
          outerY + outerH
       );
 
-      galaxyGradient.addColorStop(0.00, '#151936');
-      galaxyGradient.addColorStop(0.25, '#161a3b');
-      galaxyGradient.addColorStop(0.48, '#13142e');
-      galaxyGradient.addColorStop(0.68, '#191c3b');
-      galaxyGradient.addColorStop(1.00, '#11152f');
+      galaxyStyle.gradient.forEach((gradientColor, index) => {
+         galaxyGradient.addColorStop(
+            index / (galaxyStyle.gradient.length - 1),
+            gradientColor
+         );
+      });
 
       g.strokeStyle = galaxyGradient;
    } else {
@@ -384,7 +446,7 @@ function makeGuardLayer() {
 
    g.stroke();
 
-   if (isGalaxyBlue) {
+   if (isGalaxy) {
       drawGalaxySparkles(
          g,
          outerX,
@@ -392,7 +454,9 @@ function makeGuardLayer() {
          outerW,
          outerH,
          outerRadius,
-         thickness
+         thickness,
+         galaxyStyle.sparkles,
+         galaxyStyle.glow
       );
    }
 
@@ -410,7 +474,8 @@ function makeDividerLayer() {
 
    const color = guardColor.value;
    const isStarlight = color.toUpperCase() === '#627B79';
-   const isGalaxyBlue = color.toUpperCase() === '#4B4D8E';
+   const galaxyStyle = getGalaxyStyle(color);
+   const isGalaxy = galaxyStyle !== null;
 
    const thickness = 22;
 
@@ -445,7 +510,7 @@ function makeDividerLayer() {
       gradient.addColorStop(0.82, '#225f55');
 
       g.fillStyle = gradient;
-   } else if (isGalaxyBlue) {
+   } else if (isGalaxy) {
       const galaxyGradient = g.createLinearGradient(
          outerX,
          dividerY,
@@ -453,11 +518,12 @@ function makeDividerLayer() {
          dividerY
       );
 
-      galaxyGradient.addColorStop(0.00, '#151936');
-      galaxyGradient.addColorStop(0.25, '#161a3b');
-      galaxyGradient.addColorStop(0.48, '#13142e');
-      galaxyGradient.addColorStop(0.68, '#191c3b');
-      galaxyGradient.addColorStop(1.00, '#11152f');
+      galaxyStyle.gradient.forEach((gradientColor, index) => {
+         galaxyGradient.addColorStop(
+            index / (galaxyStyle.gradient.length - 1),
+            gradientColor
+         );
+      });
 
       g.fillStyle = galaxyGradient;
    } else {
@@ -509,7 +575,7 @@ function makeDividerLayer() {
    }
 
    // Add Galaxy Blue sparkles over the divider.
-   if (isGalaxyBlue) {
+   if (isGalaxy) {
       drawGalaxySparklesInRect(
          g,
          dividerX,
@@ -517,7 +583,8 @@ function makeDividerLayer() {
          dividerWidth,
          dividerThickness,
          250,
-         2841
+         2841,
+         galaxyStyle.sparkles
       );
    }
 
@@ -544,7 +611,8 @@ function makeInnerEdgeLayer() {
    const innerEdgeWidth = 16;
 
    const isStarlight = color.toUpperCase() === '#627B79';
-   const isGalaxyBlue = color.toUpperCase() === '#4B4D8E';
+   const galaxyStyle = getGalaxyStyle(color);
+   const isGalaxy = galaxyStyle !== null;
 
    if (isStarlight) {
       const innerGradient = g.createLinearGradient(
@@ -561,7 +629,7 @@ function makeInnerEdgeLayer() {
       innerGradient.addColorStop(1.00, '#111719');
 
       g.strokeStyle = innerGradient;
-   } else if (isGalaxyBlue) {
+   } else if (isGalaxy) {
       const galaxyGradient = g.createLinearGradient(
          outerX,
          outerY,
@@ -569,11 +637,12 @@ function makeInnerEdgeLayer() {
          outerY + outerH
       );
 
-      galaxyGradient.addColorStop(0.00, '#151936');
-      galaxyGradient.addColorStop(0.25, '#161a3b');
-      galaxyGradient.addColorStop(0.48, '#13142e');
-      galaxyGradient.addColorStop(0.68, '#191c3b');
-      galaxyGradient.addColorStop(1.00, '#11152f');
+      galaxyStyle.gradient.forEach((gradientColor, index) => {
+         galaxyGradient.addColorStop(
+            index / (galaxyStyle.gradient.length - 1),
+            gradientColor
+         );
+      });
 
       g.strokeStyle = galaxyGradient;
    } else {
@@ -595,7 +664,7 @@ function makeInnerEdgeLayer() {
 
    g.stroke();
 
-   if (isGalaxyBlue) {
+   if (isGalaxy) {
       drawGalaxySparkles(
          g,
          outerX + thickness - overlap,
@@ -603,11 +672,29 @@ function makeInnerEdgeLayer() {
          outerW - ((thickness - overlap) * 2),
          outerH - ((thickness - overlap) * 2),
          Math.max(4, outerRadius),
-         innerEdgeWidth
+         innerEdgeWidth,
+         galaxyStyle.sparkles,
+         galaxyStyle.glow
       );
    }
 
    return layer;
+}
+
+function renderWithSpinner() {
+   showRenderSpinner();
+
+   // Give the browser enough time to display the overlay
+   // before the expensive canvas rendering starts.
+   requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+         render();
+
+         requestAnimationFrame(() => {
+            hideRenderSpinner();
+         });
+      });
+   });
 }
 
 function render() {
@@ -643,8 +730,9 @@ function render() {
 
    // Simulate seeing the pieces through the clear slab.
    ctx.save();
-   ctx.globalAlpha = 0.5;
 
+   // Back accent strip
+   ctx.globalAlpha = 0.4;
    ctx.drawImage(
       cachedDividerLayer,
       drawX,
@@ -653,6 +741,8 @@ function render() {
       drawH
    );
 
+   // Inner edge stays lighter
+   ctx.globalAlpha = 0.4;
    ctx.drawImage(
       cachedInnerEdgeLayer,
       drawX,
@@ -751,38 +841,6 @@ canvas.addEventListener('drop', event => {
       loadFile(file);
 });
 
-// guardColor.addEventListener('input', () => {
-//    hexValue.textContent = guardColor.value.toUpperCase();
-
-// document.documentElement.style.setProperty(
-//    '--slab-preview-accent',
-//    guardColor.value
-// );
-
-// const color = guardColor.value;
-
-// const r = parseInt(color.slice(1, 3), 16);
-// const g = parseInt(color.slice(3, 5), 16);
-// const b = parseInt(color.slice(5, 7), 16);
-
-// const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-// document.documentElement.style.setProperty(
-//    '--slab-preview-button-text',
-//    brightness > 186 ? '#000000' : '#ffffff'
-// );
-
-// document.querySelectorAll('.slab-preview-swatch').forEach(button => {
-//    button.classList.toggle(
-//       'active',
-//       button.dataset.color.toLowerCase() ===
-//       guardColor.value.toLowerCase()
-//    );
-// });
-
-// render();
-// });
-
 canvas.addEventListener('click', event => {
    const rect = canvas.getBoundingClientRect();
 
@@ -845,6 +903,7 @@ document
          return;
 
       guardColor.value = button.dataset.color;
+      selectedGuardName = button.dataset.name;
 
       cachedGuardLayer = null;
       cachedDividerLayer = null;
@@ -852,6 +911,7 @@ document
       cachedGuardColor = null;
 
       hexValue.textContent = button.dataset.name;
+      updateCheckoutSummary();
       document.documentElement.style.setProperty(
          '--slab-preview-accent',
          guardColor.value
@@ -877,7 +937,14 @@ document
          )
       );
 
-      render();
+      const isGalaxySelection =
+         getGalaxyStyle(guardColor.value) !== null;
+
+      if (isGalaxySelection) {
+         renderWithSpinner();
+      } else {
+         render();
+      }
    });
 
 [zoom, offsetX, offsetY].forEach(input => {
@@ -912,3 +979,273 @@ downloadBtn.addEventListener('click', () => {
 });
 
 render();
+
+// ------------------------------
+// SLAB GUARD CART + SQUARE CHECKOUT
+// ------------------------------
+
+const CART_STORAGE_KEY = 'crackedIceSlabGuardCartV1';
+const CHECKOUT_ENDPOINT = window.CRACKED_ICE_CHECKOUT_API_URL;
+
+if (!CHECKOUT_ENDPOINT) {
+   console.warn('CRACKED_ICE_CHECKOUT_API_URL has not been configured.');
+}
+
+const CHECKOUT_PRICES = {
+   solo: 3,
+   galaxy: 4,
+   customText: 1
+};
+
+const checkoutColor = document.getElementById('checkoutColor');
+const checkoutStyleBadge = document.getElementById('checkoutStyleBadge');
+const checkoutUnitPrice = document.getElementById('checkoutUnitPrice');
+const checkoutTotal = document.getElementById('checkoutTotal');
+const guardQuantity = document.getElementById('guardQuantity');
+const customTextEnabled = document.getElementById('customTextEnabled');
+const customTextField = document.getElementById('customTextField');
+const customText = document.getElementById('customText');
+const addToCartBtn = document.getElementById('addToCartBtn');
+const cartItems = document.getElementById('cartItems');
+const cartEmpty = document.getElementById('cartEmpty');
+const cartCount = document.getElementById('cartCount');
+const cartSubtotal = document.getElementById('cartSubtotal');
+const cartCheckoutBtn = document.getElementById('cartCheckoutBtn');
+const cartStatus = document.getElementById('cartStatus');
+
+let selectedGuardName = 'White';
+let cart = loadCart();
+
+function getSelectedGuardStyle() {
+   const color = guardColor.value.toUpperCase();
+   const isGalaxy = getGalaxyStyle(color) !== null;
+   const isStarlight = color === '#627B79';
+
+   return isGalaxy || isStarlight ? 'galaxy' : 'solo';
+}
+
+function getCheckoutQuantity() {
+   const quantity = Number.parseInt(guardQuantity.value, 10);
+   return Number.isFinite(quantity) ? Math.min(50, Math.max(1, quantity)) : 1;
+}
+
+function getConfiguredUnitPrice(style, hasCustomText) {
+   return CHECKOUT_PRICES[style] + (hasCustomText ? CHECKOUT_PRICES.customText : 0);
+}
+
+function formatMoney(amount) {
+   return `$${amount.toFixed(2)}`;
+}
+
+function updateCheckoutSummary() {
+   const style = getSelectedGuardStyle();
+   const quantity = getCheckoutQuantity();
+   const hasCustomText = customTextEnabled.checked;
+   const unitPrice = getConfiguredUnitPrice(style, hasCustomText);
+
+   guardQuantity.value = quantity;
+   checkoutColor.textContent = selectedGuardName;
+   checkoutStyleBadge.textContent = style === 'galaxy' ? 'Galaxy' : 'Solo';
+   checkoutUnitPrice.textContent = formatMoney(unitPrice);
+   checkoutTotal.textContent = formatMoney(unitPrice * quantity);
+   customTextField.classList.toggle('hidden', !hasCustomText);
+   customText.required = hasCustomText;
+}
+
+function loadCart() {
+   try {
+      const savedCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY));
+      return Array.isArray(savedCart) ? savedCart : [];
+   } catch (error) {
+      console.warn('The saved cart could not be loaded.', error);
+      return [];
+   }
+}
+
+function saveCart() {
+   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+}
+
+function createCartKey(item) {
+   return [
+      item.style,
+      item.colorHex.toUpperCase(),
+      item.customText.trim().toLowerCase()
+   ].join('|');
+}
+
+function addCurrentSelectionToCart() {
+   const hasCustomText = customTextEnabled.checked;
+   const enteredCustomText = customText.value.trim();
+
+   if (hasCustomText && !enteredCustomText) {
+      customText.setCustomValidity('Enter the custom text you want printed on the guard.');
+      customText.reportValidity();
+      return;
+   }
+
+   customText.setCustomValidity('');
+
+   const item = {
+      id: crypto.randomUUID(),
+      style: getSelectedGuardStyle(),
+      colorName: selectedGuardName,
+      colorHex: guardColor.value.toUpperCase(),
+      quantity: getCheckoutQuantity(),
+      customText: hasCustomText ? enteredCustomText : ''
+   };
+
+   const key = createCartKey(item);
+   const existingItem = cart.find(cartItem => createCartKey(cartItem) === key);
+
+   if (existingItem) {
+      existingItem.quantity = Math.min(50, existingItem.quantity + item.quantity);
+   } else {
+      cart.push(item);
+   }
+
+   saveCart();
+   renderCart();
+   showCartStatus(`${item.colorName} guard added to your cart.`, false);
+}
+
+function updateCartItemQuantity(itemId, quantity) {
+   const item = cart.find(cartItem => cartItem.id === itemId);
+
+   if (!item)
+      return;
+
+   item.quantity = Math.min(50, Math.max(1, quantity));
+   saveCart();
+   renderCart();
+}
+
+function removeCartItem(itemId) {
+   cart = cart.filter(item => item.id !== itemId);
+   saveCart();
+   renderCart();
+}
+
+function getCartSubtotal() {
+   return cart.reduce((total, item) => {
+      const unitPrice = getConfiguredUnitPrice(item.style, Boolean(item.customText));
+      return total + unitPrice * item.quantity;
+   }, 0);
+}
+
+function renderCart() {
+   cartItems.replaceChildren();
+
+   const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
+   cartCount.textContent = String(totalQuantity);
+   cartSubtotal.textContent = formatMoney(getCartSubtotal());
+   cartEmpty.classList.toggle('hidden', cart.length > 0);
+   cartCheckoutBtn.disabled = cart.length === 0;
+
+   cart.forEach(item => {
+      const unitPrice = getConfiguredUnitPrice(item.style, Boolean(item.customText));
+      const row = document.createElement('div');
+      row.className = 'slab-cart-item';
+
+      const details = document.createElement('div');
+      details.className = 'slab-cart-item-details';
+
+      const title = document.createElement('strong');
+      title.textContent = `${item.colorName} · ${item.style === 'galaxy' ? 'Galaxy' : 'Solo'}`;
+
+      const note = document.createElement('span');
+      note.textContent = item.customText
+         ? `Custom text: ${item.customText}`
+         : 'No custom text';
+
+      const price = document.createElement('span');
+      price.textContent = `${formatMoney(unitPrice)} each`;
+
+      details.append(title, note, price);
+
+      const controls = document.createElement('div');
+      controls.className = 'slab-cart-item-controls';
+
+      const quantityInput = document.createElement('input');
+      quantityInput.type = 'number';
+      quantityInput.min = '1';
+      quantityInput.max = '50';
+      quantityInput.value = String(item.quantity);
+      quantityInput.setAttribute('aria-label', `Quantity for ${item.colorName}`);
+      quantityInput.addEventListener('change', () => {
+         const quantity = Number.parseInt(quantityInput.value, 10);
+         updateCartItemQuantity(item.id, Number.isFinite(quantity) ? quantity : 1);
+      });
+
+      const lineTotal = document.createElement('strong');
+      lineTotal.textContent = formatMoney(unitPrice * item.quantity);
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'slab-cart-remove';
+      removeButton.setAttribute('aria-label', `Remove ${item.colorName} from cart`);
+      removeButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+      removeButton.addEventListener('click', () => removeCartItem(item.id));
+
+      controls.append(quantityInput, lineTotal, removeButton);
+      row.append(details, controls);
+      cartItems.append(row);
+   });
+}
+
+function showCartStatus(message, isError) {
+   cartStatus.textContent = message;
+   cartStatus.classList.remove('hidden', 'error');
+   cartStatus.classList.toggle('error', isError);
+}
+
+async function beginSquareCheckout() {
+   if (cart.length === 0)
+      return;
+
+   if (!CHECKOUT_ENDPOINT) {
+      showCartStatus('The checkout service has not been configured yet.', true);
+      return;
+   }
+
+   cartCheckoutBtn.disabled = true;
+   cartCheckoutBtn.classList.add('loading');
+   showCartStatus('Creating your secure Square checkout...', false);
+
+   try {
+      const response = await fetch(CHECKOUT_ENDPOINT, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({ items: cart })
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+         throw new Error(result.error || 'Checkout could not be created.');
+      }
+
+      if (!result.checkoutUrl) {
+         throw new Error('Square did not return a checkout URL.');
+      }
+
+      window.location.assign(result.checkoutUrl);
+   } catch (error) {
+      console.error(error);
+      showCartStatus(error.message || 'Checkout could not be created. Please try again.', true);
+      cartCheckoutBtn.disabled = cart.length === 0;
+      cartCheckoutBtn.classList.remove('loading');
+   }
+}
+
+guardQuantity.addEventListener('input', updateCheckoutSummary);
+guardQuantity.addEventListener('blur', updateCheckoutSummary);
+customTextEnabled.addEventListener('change', updateCheckoutSummary);
+customText.addEventListener('input', () => customText.setCustomValidity(''));
+addToCartBtn.addEventListener('click', addCurrentSelectionToCart);
+cartCheckoutBtn.addEventListener('click', beginSquareCheckout);
+
+updateCheckoutSummary();
+renderCart();
