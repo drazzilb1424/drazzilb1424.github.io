@@ -1394,39 +1394,6 @@ async function beginSquareCheckout() {
       return;
    }
 
-   // Open immediately while still inside the button click.
-   const checkoutTab = window.open('', 'squareCheckout');
-
-   if (!checkoutTab) {
-      showCartStatus(
-         'Please allow popups for this site to continue to checkout.',
-         true
-      );
-      return;
-   }
-
-   checkoutTab.document.write(`
-      <!DOCTYPE html>
-      <html lang="en">
-         <head>
-            <meta charset="UTF-8">
-            <title>Opening checkout...</title>
-         </head>
-
-         <body style="
-            margin: 0;
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-            font-family: Arial, sans-serif;
-         ">
-            <p>Opening secure Square checkout...</p>
-         </body>
-      </html>
-   `);
-
-   checkoutTab.document.close();
-
    cartCheckoutBtn.disabled = true;
    cartCheckoutBtn.classList.add('loading');
 
@@ -1460,22 +1427,10 @@ async function beginSquareCheckout() {
          );
       }
 
-      // Redirect only the newly opened tab.
-      checkoutTab.location.href = result.checkoutUrl;
-
-      showCartStatus(
-         'Square checkout opened in a new tab.',
-         false
-      );
-
-      cartCheckoutBtn.disabled = false;
-      cartCheckoutBtn.classList.remove('loading');
+      // Continue to Square in the current tab.
+      window.location.assign(result.checkoutUrl);
    } catch (error) {
       console.error(error);
-
-      if (!checkoutTab.closed) {
-         checkoutTab.close();
-      }
 
       showCartStatus(
          error.message ||
