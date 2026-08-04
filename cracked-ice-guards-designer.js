@@ -21,7 +21,7 @@ const upload = document.getElementById('slabUpload');
 
 // const guardColor = document.getElementById('guardColor');
 let guardColor = {
-   value: '#FFFFFF'
+   value: '#627B79'
 };
 const hexValue = document.getElementById('hexValue');
 
@@ -1194,7 +1194,7 @@ const cartSubtotal = document.getElementById('cartSubtotal');
 const cartCheckoutBtn = document.getElementById('cartCheckoutBtn');
 const cartStatus = document.getElementById('cartStatus');
 
-let selectedGuardName = 'White';
+let selectedGuardName = 'Stralight';
 let cart = loadCart();
 
 function getSelectedGuardStyle() {
