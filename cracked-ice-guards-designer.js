@@ -43,7 +43,101 @@ const uploadNewBtn = document.getElementById('uploadNewBtn');
 
 let slabImage = null;
 
+const CELESTIAL_STYLES = {
+   // BLUE
+   '#20B9DC': {
+      gradient: [
+         '#159FC4',
+         '#20B9DC',
+         '#29C6E5',
+         '#18AED3',
+         '#25BEDF'
+      ],
+      sparkles: [
+         'rgba(175,235,255,.95)',
+         'rgba(205,245,255,.95)',
+         'rgba(135,220,250,.90)',
+         'rgba(235,250,255,.95)'
+      ],
+      glow: 'rgba(150,230,255,.16)'
+   },
+
+   // PURPLE
+   '#9B78D0': {
+      gradient: [
+         '#7654B5',
+         '#8B68C5',
+         '#9B78D0',
+         '#A98BDA',
+         '#8763C2'
+      ],
+      sparkles: [
+         'rgba(175,235,255,.95)',
+         'rgba(205,245,255,.95)',
+         'rgba(135,220,250,.90)',
+         'rgba(235,250,255,.95)'
+      ],
+      glow: 'rgba(150,230,255,.16)'
+   },
+
+   // LIGHT PINK
+   '#F0D6D9': {
+      gradient: [
+         '#E9A5C3',
+         '#F0B2CD',
+         '#F3B8D2',
+         '#F7C5DB',
+         '#ECAAC7'
+      ],
+      sparkles: [
+         'rgba(255,255,255,.98)',
+         'rgba(250,248,245,.95)',
+         'rgba(242,240,238,.92)',
+         'rgba(255,252,248,.96)'
+      ],
+      glow: 'rgba(255,255,255,.14)'
+   },
+
+   // YELLOW
+   '#F4D96B': {
+      gradient: [
+         '#E8C84E',
+         '#F1D45E',
+         '#F4D96B',
+         '#F8E27E',
+         '#EBCB52'
+      ],
+      sparkles: [
+         'rgba(255,215,90,.98)',
+         'rgba(235,185,45,.95)',
+         'rgba(255,230,125,.95)',
+         'rgba(210,155,30,.92)'
+      ],
+      glow: 'rgba(255,205,70,.16)'
+   },
+
+   // WHITE
+   '#F1F0EC': {
+      gradient: [
+         '#FFFFFF',
+         '#F5F4F1',
+         '#F1F0EC',
+         '#FAFAF8',
+         '#ECEBE8'
+      ],
+      sparkles: [
+         'rgba(190,245,255,.95)',  // icy blue
+         'rgba(225,205,255,.95)',  // lavender
+         'rgba(255,210,235,.95)',  // pink
+         'rgba(255,255,255,.98)'   // bright white
+      ],
+      glow: 'rgba(220,235,255,.16)'
+   }
+
+};
+
 const GALAXY_STYLES = {
+   // DARK BLUE
    '#4B4D8E': {
       gradient: ['#151936', '#161a3b', '#13142e', '#191c3b', '#11152f'],
       sparkles: [
@@ -55,6 +149,7 @@ const GALAXY_STYLES = {
       glow: 'rgba(50,210,255,.12)'
    },
 
+   // DARK GREEN
    '#174A36': {
       gradient: ['#0b241b', '#123c2c', '#0d3023', '#174a36', '#091f17'],
       sparkles: [
@@ -66,6 +161,7 @@ const GALAXY_STYLES = {
       glow: 'rgba(70,220,120,.12)'
    },
 
+   // BLACK
    '#17191C': {
       gradient: ['#090909', '#1a1a1a', '#101010', '#232323', '#080808'],
       sparkles: [
@@ -77,6 +173,7 @@ const GALAXY_STYLES = {
       glow: 'rgba(255,255,255,.08)'
    },
 
+   // RED
    '#7A2028': {
       gradient: ['#be3243', '#c4293b', '#cc2b38', '#b81f31', '#be2a40'],
       sparkles: [
@@ -88,6 +185,7 @@ const GALAXY_STYLES = {
       glow: 'rgba(255,255,255,.08)'
    },
 
+   // SILVER
    '#5B6068': {
       gradient: ['#36393e', '#555b63', '#666b73', '#4c5057', '#2d3035'],
       sparkles: [
@@ -102,6 +200,10 @@ const GALAXY_STYLES = {
 
 function getGalaxyStyle(color) {
    return GALAXY_STYLES[color.toUpperCase()] ?? null;
+}
+
+function getCelestialStyle(color) {
+   return CELESTIAL_STYLES[color.toUpperCase()] ?? null;
 }
 
 function rebuildGuardLayersIfNeeded() {
@@ -131,7 +233,459 @@ function seededRandom(seed) {
    };
 }
 
-function drawGalaxySparklesInRect(
+function drawSparklePattern(
+   context,
+   x,
+   y,
+   width,
+   height,
+   sparkleColors,
+   count = 500,
+   seed = 2841
+) {
+   context.save();
+
+   context.beginPath();
+   context.rect(x, y, width, height);
+   context.clip();
+
+   const random = seededRandom(seed);
+
+   for (let i = 0; i < count; i++) {
+      const sparkleX = x + random() * width;
+      const sparkleY = y + random() * height;
+
+      const sizeRandom = random();
+
+      let radius;
+
+      if (sizeRandom < 0.45) {
+         radius = 0.20;
+      } else if (sizeRandom < 0.75) {
+         radius = 0.35;
+      } else if (sizeRandom < 0.93) {
+         radius = 0.55;
+      } else {
+         radius = 0.75;
+      }
+
+      context.beginPath();
+
+      context.arc(
+         sparkleX,
+         sparkleY,
+         radius,
+         0,
+         Math.PI * 2
+      );
+
+      context.fillStyle =
+         sparkleColors[
+         Math.floor(random() * sparkleColors.length)
+         ];
+
+      context.fill();
+   }
+
+   context.restore();
+}
+
+
+function createSparklePattern(sparkleColors, glowColor) {
+   const tile = document.createElement('canvas');
+
+   tile.width = 80;
+   tile.height = 80;
+
+   const g = tile.getContext('2d');
+
+   const flakes = [
+      { x: 12, y: 14, c: 0 },
+      { x: 34, y: 9, c: 1 },
+      { x: 62, y: 18, c: 2 },
+      { x: 21, y: 39, c: 3 },
+      { x: 52, y: 45, c: 0 },
+      { x: 72, y: 58, c: 1 },
+      { x: 15, y: 67, c: 2 },
+      { x: 43, y: 72, c: 3 },
+
+      { x: 26, y: 25, c: 0 },
+      { x: 48, y: 31, c: 2 },
+      { x: 68, y: 38, c: 1 },
+      { x: 31, y: 57, c: 3 },
+      { x: 60, y: 68, c: 0 },
+
+      { x: 8, y: 30, c: 1 },
+      { x: 44, y: 16, c: 3 },
+      { x: 75, y: 8, c: 0 },
+      { x: 57, y: 27, c: 1 },
+      { x: 38, y: 42, c: 2 },
+      { x: 76, y: 48, c: 3 },
+      { x: 7, y: 51, c: 0 },
+      { x: 23, y: 75, c: 1 },
+      { x: 50, y: 59, c: 2 },
+      { x: 69, y: 76, c: 3 },
+      { x: 5, y: 6, c: 2 },
+      { x: 39, y: 64, c: 0 },
+
+      { x: 19, y: 6, c: 3 },
+      { x: 51, y: 7, c: 2 },
+      { x: 71, y: 25, c: 0 },
+      { x: 16, y: 22, c: 1 },
+      { x: 37, y: 29, c: 3 },
+      { x: 59, y: 37, c: 2 },
+      { x: 13, y: 45, c: 0 },
+      { x: 29, y: 48, c: 2 },
+      { x: 45, y: 52, c: 1 },
+      { x: 64, y: 53, c: 3 },
+      { x: 9, y: 60, c: 1 },
+      { x: 27, y: 65, c: 0 },
+      { x: 55, y: 75, c: 3 },
+      { x: 75, y: 69, c: 2 },
+      { x: 35, y: 20, c: 1 },
+
+      { x: 8, y: 17, c: 0 },
+      { x: 27, y: 11, c: 2 },
+      { x: 42, y: 5, c: 1 },
+      { x: 58, y: 10, c: 3 },
+      { x: 69, y: 13, c: 0 },
+
+      { x: 5, y: 24, c: 2 },
+      { x: 22, y: 18, c: 3 },
+      { x: 41, y: 23, c: 0 },
+      { x: 53, y: 20, c: 1 },
+      { x: 77, y: 30, c: 2 },
+
+      { x: 14, y: 34, c: 3 },
+      { x: 30, y: 34, c: 0 },
+      { x: 44, y: 37, c: 1 },
+      { x: 55, y: 33, c: 2 },
+      { x: 73, y: 42, c: 3 },
+
+      { x: 4, y: 40, c: 1 },
+      { x: 18, y: 49, c: 2 },
+      { x: 35, y: 52, c: 3 },
+      { x: 49, y: 40, c: 0 },
+      { x: 63, y: 44, c: 1 },
+
+      { x: 10, y: 56, c: 2 },
+      { x: 24, y: 54, c: 0 },
+      { x: 40, y: 58, c: 1 },
+      { x: 57, y: 55, c: 3 },
+      { x: 70, y: 51, c: 2 },
+
+      { x: 5, y: 71, c: 3 },
+      { x: 19, y: 61, c: 1 },
+      { x: 34, y: 69, c: 2 },
+      { x: 47, y: 66, c: 0 },
+      { x: 64, y: 62, c: 3 },
+
+      { x: 76, y: 63, c: 0 },
+      { x: 11, y: 77, c: 2 },
+      { x: 29, y: 78, c: 3 },
+      { x: 46, y: 77, c: 1 },
+      { x: 63, y: 79, c: 0 },
+      { x: 77, y: 78, c: 2 },
+
+      { x: 32, y: 3, c: 0 },
+      { x: 65, y: 5, c: 1 },
+      { x: 3, y: 63, c: 3 },
+      { x: 78, y: 19, c: 1 }
+   ];
+
+   flakes.forEach(flake => {
+      const color =
+         sparkleColors[
+         flake.c % sparkleColors.length
+         ];
+
+
+      // --------------------------------
+      // REPEATABLE RANDOM SIZE
+      // --------------------------------
+
+      const sizeRandom =
+         Math.abs(
+            Math.sin(
+               flake.x * 12.9898 +
+               flake.y * 78.233
+            )
+         ) % 1;
+
+      let radius;
+
+      if (sizeRandom < 0.45) {
+         radius = 0.25;
+      } else if (sizeRandom < 0.75) {
+         radius = 0.50;
+      } else if (sizeRandom < 0.93) {
+         radius = 0.80;
+      } else {
+         radius = 1.10;
+      }
+
+      if (sizeRandom < 0.45) {
+         radius = 0.20;
+      } else if (sizeRandom < 0.75) {
+         radius = 0.35;
+      } else if (sizeRandom < 0.93) {
+         radius = 0.50;
+      } else {
+         radius = 0.75;
+      }
+
+
+      // --------------------------------
+      // RANDOM SHINE
+      // --------------------------------
+      //
+      // This uses different numbers than
+      // the size calculation so shine isn't
+      // tied to flake size.
+      // --------------------------------
+
+      const shineRandom =
+         Math.abs(
+            Math.sin(
+               flake.x * 37.719 +
+               flake.y * 93.127 +
+               17.531
+            )
+         ) % 1;
+
+
+      // Most flakes are normal.
+      let brightness = 0.60;
+      let glowStrength = 0;
+      let glowSize = 1;
+
+      // About 25% are brighter
+      if (shineRandom >= 0.75) {
+         brightness = 0.85;
+
+         radius *= 1.05;
+
+         glowStrength = 0.35;
+         glowSize = 1.7;
+      }
+
+      // About 10% are very shiny
+      if (shineRandom >= 0.90) {
+         brightness = 1.0;
+
+         radius *= 1.05;
+
+         glowStrength = 0.65;
+         glowSize = 2.0;
+      }
+
+      // About 3% are extra reflective
+      const isHotSparkle =
+         shineRandom >= 0.97;
+
+      if (isHotSparkle) {
+         brightness = 1.0;
+
+         radius *= 1.05;
+
+         glowStrength = 0.90;
+         glowSize = 2.4;
+      }
+
+
+      // --------------------------------
+      // OUTER GLOW
+      // --------------------------------
+
+      if (glowStrength > 0) {
+         g.save();
+
+         g.globalAlpha = glowStrength;
+
+         g.beginPath();
+
+         g.arc(
+            flake.x,
+            flake.y,
+            radius * glowSize,
+            0,
+            Math.PI * 2
+         );
+
+         g.fillStyle = glowColor;
+         g.fill();
+
+         g.restore();
+      }
+
+
+      // --------------------------------
+      // ACTUAL FLAKE
+      // --------------------------------
+
+      g.save();
+
+      g.globalAlpha = brightness;
+
+      g.beginPath();
+
+      g.arc(
+         flake.x,
+         flake.y,
+         radius,
+         0,
+         Math.PI * 2
+      );
+
+      g.fillStyle = color;
+      g.fill();
+
+      g.restore();
+
+
+      // --------------------------------
+      // BRIGHT REFLECTION
+      // --------------------------------
+
+      if (shineRandom >= 0.90) {
+         g.save();
+
+         g.globalAlpha =
+            isHotSparkle
+               ? 1.0
+               : 0.80;
+
+         g.beginPath();
+
+         g.arc(
+            flake.x - radius * 0.18,
+            flake.y - radius * 0.18,
+            Math.max(
+               0.15,
+               radius * 0.32
+            ),
+            0,
+            Math.PI * 2
+         );
+
+         g.fillStyle =
+            'rgba(255,255,255,1)';
+
+         g.fill();
+
+         g.restore();
+      }
+
+
+      // --------------------------------
+      // RARE STAR-LIKE GLINT
+      // --------------------------------
+
+      if (isHotSparkle) {
+         g.save();
+
+         g.globalAlpha = 0.90;
+
+         g.strokeStyle =
+            'rgba(255,255,255,1)';
+
+         g.lineWidth = 0.25;
+
+         const glintSize =
+            Math.max(
+               1.2,
+               radius * 1.8
+            );
+
+         g.beginPath();
+
+         // Horizontal shine
+         g.moveTo(
+            flake.x - glintSize,
+            flake.y
+         );
+
+         g.lineTo(
+            flake.x + glintSize,
+            flake.y
+         );
+
+         // Vertical shine
+         g.moveTo(
+            flake.x,
+            flake.y - glintSize
+         );
+
+         g.lineTo(
+            flake.x,
+            flake.y + glintSize
+         );
+
+         g.stroke();
+
+         g.restore();
+      }
+   });
+
+   return tile;
+}
+
+function drawFrameSparkles(
+   context,
+   outerX,
+   outerY,
+   outerW,
+   outerH,
+   outerRadius,
+   thickness,
+   sparkleColors,
+   glowColor
+) {
+   context.save();
+
+   context.beginPath();
+
+   context.roundRect(
+      outerX,
+      outerY,
+      outerW,
+      outerH,
+      outerRadius
+   );
+
+   context.roundRect(
+      outerX + thickness,
+      outerY + thickness,
+      outerW - thickness * 2,
+      outerH - thickness * 2,
+      Math.max(4, outerRadius - thickness)
+   );
+
+   context.clip('evenodd');
+
+   const sparkleTile = createSparklePattern(
+      sparkleColors,
+      glowColor
+   );
+
+   const pattern = context.createPattern(
+      sparkleTile,
+      'repeat'
+   );
+
+   context.fillStyle = pattern;
+
+   context.fillRect(
+      outerX,
+      outerY,
+      outerW,
+      outerH
+   );
+
+   context.restore();
+}
+
+function drawSparklesInRect(
    context,
    x,
    y,
@@ -337,28 +891,42 @@ function isPointerInsideSlab(position) {
 
 function makeGuardLayer() {
    const layer = document.createElement('canvas');
+
    layer.width = canvas.width;
    layer.height = canvas.height;
+
    const g = layer.getContext('2d');
 
    const color = guardColor.value;
-   const isStarlight = color.toUpperCase() === '#627B79';
-   const galaxyStyle = getGalaxyStyle(color);
-   const isGalaxy = galaxyStyle !== null;
+
+   const isStarlight =
+      color.toUpperCase() === '#627B79';
+
+   const galaxyStyle =
+      getGalaxyStyle(color);
+
+   const isGalaxy =
+      galaxyStyle !== null;
+
+   const celestialStyle =
+      getCelestialStyle(color);
+
+   const isCelestial =
+      celestialStyle !== null;
 
    const thickness = 22;
 
-   // Overall guard bounds.
    const outerX = 70;
    const outerY = 30;
    const outerW = 560;
    const outerH = 940;
    const outerRadius = 24;
 
-   // Position of the horizontal separator between the label and card areas.
-   const dividerY = 245;
 
-   // Draw only the thin outside frame.
+   // ------------------------------
+   // BASE COLOR / GRADIENT
+   // ------------------------------
+
    g.lineWidth = thickness;
    g.lineJoin = 'round';
 
@@ -377,25 +945,36 @@ function makeGuardLayer() {
       gradient.addColorStop(0.82, '#225f55');
 
       g.strokeStyle = gradient;
-   } else if (isGalaxy) {
-      const galaxyGradient = g.createLinearGradient(
+
+   } else if (isGalaxy || isCelestial) {
+      const style = isGalaxy
+         ? galaxyStyle
+         : celestialStyle;
+
+      const sparkleGradient = g.createLinearGradient(
          outerX,
          outerY,
          outerX + outerW,
          outerY + outerH
       );
 
-      galaxyStyle.gradient.forEach((gradientColor, index) => {
-         galaxyGradient.addColorStop(
-            index / (galaxyStyle.gradient.length - 1),
+      style.gradient.forEach((gradientColor, index) => {
+         sparkleGradient.addColorStop(
+            index / (style.gradient.length - 1),
             gradientColor
          );
       });
 
-      g.strokeStyle = galaxyGradient;
+      g.strokeStyle = sparkleGradient;
+
    } else {
       g.strokeStyle = color;
    }
+
+
+   // ------------------------------
+   // DRAW OUTER FRAME
+   // ------------------------------
 
    roundedRectPath(
       g,
@@ -408,7 +987,11 @@ function makeGuardLayer() {
 
    g.stroke();
 
-   // Add a subtle shimmer over the Starlight guard.
+
+   // ------------------------------
+   // STARLIGHT SHIMMER
+   // ------------------------------
+
    if (isStarlight) {
       const shine = g.createLinearGradient(
          outerX,
@@ -417,7 +1000,10 @@ function makeGuardLayer() {
          outerY + outerH
       );
 
-      shine.addColorStop(0.50, 'rgba(95,255,210,.45)');
+      shine.addColorStop(
+         0.50,
+         'rgba(95,255,210,.45)'
+      );
 
       g.save();
 
@@ -435,13 +1021,19 @@ function makeGuardLayer() {
       );
 
       g.stroke();
+
       g.restore();
    }
 
-   // Add very subtle highlights/shadows so it still looks dimensional,
-   // without making the guard appear thick.
+
+   // ------------------------------
+   // SUBTLE DIMENSION
+   // ------------------------------
+
    g.lineWidth = 1;
-   g.strokeStyle = 'rgba(255,255,255,.28)';
+
+   g.strokeStyle =
+      'rgba(255,255,255,.28)';
 
    roundedRectPath(
       g,
@@ -454,7 +1046,9 @@ function makeGuardLayer() {
 
    g.stroke();
 
-   g.strokeStyle = 'rgba(0,0,0,.16)';
+
+   g.strokeStyle =
+      'rgba(0,0,0,.16)';
 
    roundedRectPath(
       g,
@@ -467,8 +1061,17 @@ function makeGuardLayer() {
 
    g.stroke();
 
-   if (isGalaxy) {
-      drawGalaxySparkles(
+
+   // ------------------------------
+   // GALAXY / CELESTIAL SPARKLES
+   // ------------------------------
+
+   if (isGalaxy || isCelestial) {
+      const style = isGalaxy
+         ? galaxyStyle
+         : celestialStyle;
+
+      drawFrameSparkles(
          g,
          outerX,
          outerY,
@@ -476,8 +1079,8 @@ function makeGuardLayer() {
          outerH,
          outerRadius,
          thickness,
-         galaxyStyle.sparkles,
-         galaxyStyle.glow
+         style.sparkles,
+         style.glow
       );
    }
 
@@ -495,8 +1098,12 @@ function makeDividerLayer() {
 
    const color = guardColor.value;
    const isStarlight = color.toUpperCase() === '#627B79';
+
    const galaxyStyle = getGalaxyStyle(color);
    const isGalaxy = galaxyStyle !== null;
+
+   const celestialStyle = getCelestialStyle(color);
+   const isCelestial = celestialStyle !== null;
 
    const thickness = 22;
 
@@ -515,7 +1122,11 @@ function makeDividerLayer() {
    const dividerWidth =
       outerW - thickness - leftInset;
 
-   // Set the main divider color before drawing it.
+
+   // ------------------------------
+   // BASE COLOR / GRADIENT
+   // ------------------------------
+
    if (isStarlight) {
       const gradient = g.createLinearGradient(
          outerX,
@@ -531,25 +1142,36 @@ function makeDividerLayer() {
       gradient.addColorStop(0.82, '#225f55');
 
       g.fillStyle = gradient;
-   } else if (isGalaxy) {
-      const galaxyGradient = g.createLinearGradient(
+
+   } else if (isGalaxy || isCelestial) {
+      const style = isGalaxy
+         ? galaxyStyle
+         : celestialStyle;
+
+      const sparkleGradient = g.createLinearGradient(
          outerX,
          dividerY,
          outerX + outerW,
          dividerY
       );
 
-      galaxyStyle.gradient.forEach((gradientColor, index) => {
-         galaxyGradient.addColorStop(
-            index / (galaxyStyle.gradient.length - 1),
+      style.gradient.forEach((gradientColor, index) => {
+         sparkleGradient.addColorStop(
+            index / (style.gradient.length - 1),
             gradientColor
          );
       });
 
-      g.fillStyle = galaxyGradient;
+      g.fillStyle = sparkleGradient;
+
    } else {
       g.fillStyle = color;
    }
+
+
+   // ------------------------------
+   // DRAW DIVIDER
+   // ------------------------------
 
    roundedRectPath(
       g,
@@ -562,7 +1184,11 @@ function makeDividerLayer() {
 
    g.fill();
 
-   // Add a subtle shimmer over the Starlight divider.
+
+   // ------------------------------
+   // STARLIGHT SHIMMER
+   // ------------------------------
+
    if (isStarlight) {
       const shine = g.createLinearGradient(
          outerX,
@@ -580,6 +1206,7 @@ function makeDividerLayer() {
       shine.addColorStop(1.00, 'rgba(0, 0, 0, 0)');
 
       g.save();
+
       g.fillStyle = shine;
 
       roundedRectPath(
@@ -592,21 +1219,52 @@ function makeDividerLayer() {
       );
 
       g.fill();
+
       g.restore();
    }
 
-   // Add Galaxy Blue sparkles over the divider.
-   if (isGalaxy) {
-      drawGalaxySparklesInRect(
-         g,
+
+   // ------------------------------
+   // GALAXY / CELESTIAL SPARKLES
+   // ------------------------------
+
+   if (isGalaxy || isCelestial) {
+      const style = isGalaxy
+         ? galaxyStyle
+         : celestialStyle;
+
+      g.save();
+
+      // Keep the sparkle texture clipped inside the divider only.
+      g.beginPath();
+      g.rect(
          dividerX,
          dividerTop,
          dividerWidth,
-         dividerThickness,
-         250,
-         2841,
-         galaxyStyle.sparkles
+         dividerThickness
       );
+      g.clip();
+
+      const sparkleTile = createSparklePattern(
+         style.sparkles,
+         style.glow
+      );
+
+      const pattern = g.createPattern(
+         sparkleTile,
+         'repeat'
+      );
+
+      g.fillStyle = pattern;
+
+      g.fillRect(
+         dividerX,
+         dividerTop,
+         dividerWidth,
+         dividerThickness
+      );
+
+      g.restore();
    }
 
    return layer;
@@ -614,6 +1272,7 @@ function makeDividerLayer() {
 
 function makeInnerEdgeLayer() {
    const layer = document.createElement('canvas');
+
    layer.width = canvas.width;
    layer.height = canvas.height;
 
@@ -628,12 +1287,27 @@ function makeInnerEdgeLayer() {
    const outerH = 940;
    const outerRadius = 5;
 
-   // Width of the translucent area visible along the inside edge.
    const innerEdgeWidth = 16;
 
-   const isStarlight = color.toUpperCase() === '#627B79';
-   const galaxyStyle = getGalaxyStyle(color);
-   const isGalaxy = galaxyStyle !== null;
+   const isStarlight =
+      color.toUpperCase() === '#627B79';
+
+   const galaxyStyle =
+      getGalaxyStyle(color);
+
+   const isGalaxy =
+      galaxyStyle !== null;
+
+   const celestialStyle =
+      getCelestialStyle(color);
+
+   const isCelestial =
+      celestialStyle !== null;
+
+
+   // ------------------------------
+   // BASE COLOR / GRADIENT
+   // ------------------------------
 
    if (isStarlight) {
       const innerGradient = g.createLinearGradient(
@@ -650,25 +1324,37 @@ function makeInnerEdgeLayer() {
       innerGradient.addColorStop(1.00, '#111719');
 
       g.strokeStyle = innerGradient;
-   } else if (isGalaxy) {
-      const galaxyGradient = g.createLinearGradient(
+
+   } else if (isGalaxy || isCelestial) {
+      const style = isGalaxy
+         ? galaxyStyle
+         : celestialStyle;
+
+      const sparkleGradient = g.createLinearGradient(
          outerX,
          outerY,
          outerX + outerW,
          outerY + outerH
       );
 
-      galaxyStyle.gradient.forEach((gradientColor, index) => {
-         galaxyGradient.addColorStop(
-            index / (galaxyStyle.gradient.length - 1),
+      style.gradient.forEach((gradientColor, index) => {
+         sparkleGradient.addColorStop(
+            index / (style.gradient.length - 1),
             gradientColor
          );
       });
 
-      g.strokeStyle = galaxyGradient;
+      g.strokeStyle = sparkleGradient;
+
    } else {
       g.strokeStyle = color;
    }
+
+
+   // ------------------------------
+   // DRAW INNER EDGE
+   // ------------------------------
+
    g.lineWidth = innerEdgeWidth;
    g.lineJoin = 'round';
 
@@ -685,8 +1371,17 @@ function makeInnerEdgeLayer() {
 
    g.stroke();
 
-   if (isGalaxy) {
-      drawGalaxySparkles(
+
+   // ------------------------------
+   // GALAXY / CELESTIAL SPARKLES
+   // ------------------------------
+
+   if (isGalaxy || isCelestial) {
+      const style = isGalaxy
+         ? galaxyStyle
+         : celestialStyle;
+
+      drawFrameSparkles(
          g,
          outerX + thickness - overlap,
          outerY + thickness - overlap,
@@ -694,28 +1389,12 @@ function makeInnerEdgeLayer() {
          outerH - ((thickness - overlap) * 2),
          Math.max(4, outerRadius),
          innerEdgeWidth,
-         galaxyStyle.sparkles,
-         galaxyStyle.glow
+         style.sparkles,
+         style.glow
       );
    }
 
    return layer;
-}
-
-function renderWithSpinner() {
-   showRenderSpinner();
-
-   // Give the browser enough time to display the overlay
-   // before the expensive canvas rendering starts.
-   requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-         render();
-
-         requestAnimationFrame(() => {
-            hideRenderSpinner();
-         });
-      });
-   });
 }
 
 function render() {
@@ -1140,14 +1819,11 @@ document
          )
       );
 
-      const isGalaxySelection =
-         getGalaxyStyle(guardColor.value) !== null;
+      const isSparkleSelection =
+         getGalaxyStyle(guardColor.value) !== null ||
+         getCelestialStyle(guardColor.value) !== null;
 
-      if (isGalaxySelection) {
-         renderWithSpinner();
-      } else {
-         render();
-      }
+      render();
    });
 
 downloadBtn.addEventListener('click', () => {
@@ -1174,7 +1850,8 @@ if (!CHECKOUT_ENDPOINT) {
 
 const CHECKOUT_PRICES = {
    solo: 3,
-   galaxy: 4,
+   galaxy: 3,
+   celestial: 3,
    customText: 1
 };
 
@@ -1194,15 +1871,22 @@ const cartSubtotal = document.getElementById('cartSubtotal');
 const cartCheckoutBtn = document.getElementById('cartCheckoutBtn');
 const cartStatus = document.getElementById('cartStatus');
 
-let selectedGuardName = 'Stralight';
+let selectedGuardName = 'Starlight';
 let cart = loadCart();
 
 function getSelectedGuardStyle() {
    const color = guardColor.value.toUpperCase();
    const isGalaxy = getGalaxyStyle(color) !== null;
+   const isCelestial = getCelestialStyle(color) !== null;
    const isStarlight = color === '#627B79';
 
-   return isGalaxy || isStarlight ? 'galaxy' : 'solo';
+   if (isCelestial)
+      return 'celestial';
+
+   if (isGalaxy || isStarlight)
+      return 'galaxy';
+
+   return 'solo';
 }
 
 function getCheckoutQuantity() {
@@ -1226,7 +1910,12 @@ function updateCheckoutSummary() {
 
    guardQuantity.value = quantity;
    checkoutColor.textContent = selectedGuardName;
-   checkoutStyleBadge.textContent = style === 'galaxy' ? 'Galaxy' : 'Solo';
+   checkoutStyleBadge.textContent =
+      style === 'galaxy'
+         ? 'Galaxy'
+         : style === 'celestial'
+            ? 'Celestial'
+            : 'Solo';
    checkoutUnitPrice.textContent = formatMoney(unitPrice);
    checkoutTotal.textContent = formatMoney(unitPrice * quantity);
    customTextField.classList.toggle('hidden', !hasCustomText);
@@ -1332,7 +2021,14 @@ function renderCart() {
       details.className = 'slab-cart-item-details';
 
       const title = document.createElement('strong');
-      title.textContent = `${item.colorName} · ${item.style === 'galaxy' ? 'Galaxy' : 'Solo'}`;
+      const styleName =
+         item.style === 'galaxy'
+            ? 'Galaxy'
+            : item.style === 'celestial'
+               ? 'Celestial'
+               : 'Solo';
+
+      title.textContent = `${item.colorName} · ${styleName}`;
 
       const note = document.createElement('span');
       note.textContent = item.customText
