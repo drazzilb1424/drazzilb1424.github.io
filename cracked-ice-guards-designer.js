@@ -83,19 +83,21 @@ const CELESTIAL_STYLES = {
    // LIGHT PINK
    '#F0D6D9': {
       gradient: [
-         '#E9A5C3',
-         '#F0B2CD',
-         '#F3B8D2',
-         '#F7C5DB',
-         '#ECAAC7'
+         '#E8CCD7',
+         '#F9E1EC',
+         '#E7C7C4',
+         '#E5C7CF',
+         '#E8CBC9'
       ],
+
       sparkles: [
-         'rgba(255,255,255,.98)',
-         'rgba(250,248,245,.95)',
-         'rgba(242,240,238,.92)',
-         'rgba(255,252,248,.96)'
+         '#FFFFFF',
+         '#FFFDF8',
+         '#F7F1E8',
+         '#FFFFFF'
       ],
-      glow: 'rgba(255,255,255,.14)'
+
+      glow: 'rgba(255,255,255,.18)'
    },
 
    // YELLOW
