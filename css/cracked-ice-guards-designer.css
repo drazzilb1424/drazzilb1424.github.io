@@ -473,6 +473,26 @@ input[type="range"]::-webkit-slider-thumb {
    opacity: 0.8;
 }
 
+.slab-preview-color-groups {
+   display: flex;
+   flex-direction: column;
+   gap: 22px;
+   margin-top: 14px;
+}
+
+.slab-preview-color-group-title {
+   margin-bottom: 10px;
+   font-size: 0.78rem;
+   font-weight: 800;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+   color: var(--slab-preview-muted);
+}
+
+.slab-preview-color-group .slab-preview-swatches {
+   margin-top: 0;
+}
+
 .slab-preview-swatch.starlight {
    background:
       linear-gradient(135deg,
@@ -497,6 +517,75 @@ input[type="range"]::-webkit-slider-thumb {
          #505596,
          #34396d,
          #181d44);
+}
+
+.slab-preview-swatch.celestial-blue {
+   background:
+      radial-gradient(circle at 18% 20%, rgba(210, 245, 255, .95) 0 2px, transparent 3px),
+      radial-gradient(circle at 72% 30%, rgba(175, 230, 255, .90) 0 1.5px, transparent 2.5px),
+      radial-gradient(circle at 35% 75%, rgba(225, 250, 255, .95) 0 2px, transparent 3px),
+      radial-gradient(circle at 80% 70%, rgba(145, 220, 250, .85) 0 1px, transparent 2px),
+      linear-gradient(135deg,
+         #159FC4,
+         #20B9DC,
+         #29C6E5,
+         #18AED3);
+}
+
+.slab-preview-swatch.celestial-purple {
+   background:
+      radial-gradient(circle at 18% 20%, rgba(210, 245, 255, .95) 0 2px, transparent 3px),
+      radial-gradient(circle at 72% 30%, rgba(175, 230, 255, .90) 0 1.5px, transparent 2.5px),
+      radial-gradient(circle at 35% 75%, rgba(225, 250, 255, .95) 0 2px, transparent 3px),
+      radial-gradient(circle at 80% 70%, rgba(145, 220, 250, .85) 0 1px, transparent 2px),
+      linear-gradient(135deg,
+         #7654B5,
+         #8B68C5,
+         #9B78D0,
+         #A98BDA,
+         #8763C2);
+}
+
+.slab-preview-swatch.celestial-light-pink {
+   background:
+      radial-gradient(circle at 18% 20%, rgba(255, 255, 255, .98) 0 2px, transparent 3px),
+      radial-gradient(circle at 72% 30%, rgba(250, 248, 245, .95) 0 1.5px, transparent 2.5px),
+      radial-gradient(circle at 35% 75%, rgba(255, 252, 248, .95) 0 2px, transparent 3px),
+      radial-gradient(circle at 80% 70%, rgba(242, 240, 238, .90) 0 1px, transparent 2px),
+      linear-gradient(135deg,
+         #E9A5C3,
+         #F0B2CD,
+         #F0D6D9,
+         #F7C5DB,
+         #ECAAC7);
+}
+
+.slab-preview-swatch.celestial-yellow {
+   background:
+      radial-gradient(circle at 18% 20%, rgba(255, 215, 90, .98) 0 2px, transparent 3px),
+      radial-gradient(circle at 72% 30%, rgba(210, 155, 30, .95) 0 1.5px, transparent 2.5px),
+      radial-gradient(circle at 35% 75%, rgba(235, 185, 45, .95) 0 2px, transparent 3px),
+      radial-gradient(circle at 80% 70%, rgba(255, 230, 125, .95) 0 1px, transparent 2px),
+      linear-gradient(135deg,
+         #E8C84E,
+         #F1D45E,
+         #F4D96B,
+         #F8E27E,
+         #EBCB52);
+}
+
+.slab-preview-swatch.celestial-white {
+   background:
+      radial-gradient(circle at 18% 20%, rgba(190, 245, 255, .95) 0 2px, transparent 3px),
+      radial-gradient(circle at 72% 30%, rgba(225, 205, 255, .95) 0 1.5px, transparent 2.5px),
+      radial-gradient(circle at 35% 75%, rgba(255, 210, 235, .95) 0 2px, transparent 3px),
+      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, .98) 0 1px, transparent 2px),
+      linear-gradient(135deg,
+         #FFFFFF,
+         #F5F4F1,
+         #F1F0EC,
+         #FAFAF8,
+         #ECEBE8);
 }
 
 @media (max-width: 860px) {
