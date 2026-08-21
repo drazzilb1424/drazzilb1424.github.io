@@ -6,6 +6,14 @@ let cachedGuardColor = null;
 const renderOverlay = document.getElementById('renderOverlay');
 const guardTouchArea = document.getElementById('guardTouchArea');
 
+function getSelectedFulfillmentMethod() {
+   return (
+      document.querySelector(
+         'input[name="fulfillmentMethod"]:checked'
+      )?.value || 'shipping'
+   );
+}
+
 function showRenderSpinner() {
    renderOverlay?.classList.remove('hidden');
 }
@@ -2105,7 +2113,8 @@ async function beginSquareCheckout() {
             'Content-Type': 'application/json'
          },
          body: JSON.stringify({
-            items: cart
+            items: cart,
+            fulfillmentMethod: getSelectedFulfillmentMethod()
          })
       });
 
