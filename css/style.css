@@ -1203,6 +1203,10 @@ summary:focus-visible {
   }
 } */
 
+.psa-grid--3 .psa-tier--full {
+  grid-column: 1 / -1;
+}
+
 .psa-pricing {
   max-width: 1100px;
   /* margin: 0 auto; */
@@ -1893,4 +1897,77 @@ summary:focus-visible {
     padding: 0;
     text-align: center;
   }
+}
+
+/* Local slab preview responsive adjustments */
+@media (max-width: 860px) {
+
+  .slab-preview-page {
+
+    width: calc(100% - 24px);
+
+    max-width: 620px;
+
+    margin: 0 auto;
+
+    padding-top: 24px;
+
+  }
+
+
+
+  .slab-preview-shell {
+
+    grid-template-columns: minmax(0, 1fr);
+
+    grid-template-areas:
+
+      "controls"
+
+      "preview"
+
+      "colors"
+
+      "adjustments";
+
+  }
+
+
+
+  .slab-preview-controls,
+
+  .slab-preview-card,
+
+  .slab-preview-colors,
+
+  .slab-preview-adjustments {
+
+    width: 100%;
+
+    min-width: 0;
+
+  }
+
+
+
+  .slab-preview-stage {
+
+    min-height: 540px;
+
+    padding: 18px;
+
+  }
+
+}
+
+
+
+@media (max-width: 480px) {
+
+  .slab-preview-page {
+
+    width: calc(100% - 16px);
+
+  }
+
 }
